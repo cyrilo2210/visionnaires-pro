@@ -131,25 +131,49 @@ input,textarea{font-family:inherit;}
 .chat-item.active .ci-icon{opacity:1;}
 .ci-label{font-size:12px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .chat-item.active .ci-label{color:var(--text);font-weight:500;}
-.ci-del{display:none;font-size:11px;color:var(--text3);padding:1px 3px;border-radius:3px;flex-shrink:0;transition:color 0.12s;}
-.chat-item:hover .ci-del{display:block;}
+.ci-actions{display:flex;align-items:center;gap:1px;flex-shrink:0;opacity:0;transition:opacity 0.12s;}
+.chat-item:hover .ci-actions,.chat-item.active .ci-actions{opacity:1;}
+.ci-act{font-size:12px;padding:2px 4px;border-radius:4px;flex-shrink:0;transition:all 0.12s;}
+.ci-rename{color:var(--text2);}
+.ci-rename:hover{background:var(--bg4);color:var(--text);}
+.ci-del{font-size:11px;color:var(--text3);padding:2px 4px;border-radius:4px;flex-shrink:0;transition:all 0.12s;}
 .ci-del:hover{color:var(--red);}
-.ci-fav{display:none;font-size:12px;padding:1px 3px;flex-shrink:0;opacity:0.5;transition:opacity 0.12s;}
-.ci-fav.active{display:block;opacity:1;}
-.chat-item:hover .ci-fav{display:block;}
-.ci-fav:hover{opacity:1;}
+.ci-fav{color:var(--text);opacity:0.9;}
+.ci-fav.active{color:#FFD84D;opacity:1;}
+.ci-fav:hover{background:var(--bg4);opacity:1;}
 .folder-hdr{width:100%;display:flex;align-items:center;gap:6px;padding:5px 6px;border-radius:var(--r-sm);cursor:pointer;color:var(--text2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;transition:background 0.12s;}
 .folder-hdr:hover{background:var(--bg3);}
 .folder-arrow{margin-left:auto;font-size:9px;transition:transform 0.18s;}
 .folder-hdr.open .folder-arrow{transform:rotate(90deg);}
 .folder-body{display:none;padding-left:4px;}
 .folder-body.show{display:block;}
+.recent-body{padding-left:0;}
 .sb-foot{padding:10px 12px 12px;border-top:1px solid var(--border);flex-shrink:0;}
+.export-btn{width:100%;margin-bottom:10px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text2);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;}
+.export-btn:hover{background:var(--bg4);color:var(--text);}
 .sb-user-row{display:flex;align-items:center;gap:9px;}
 .sb-avatar{width:26px;height:26px;border-radius:50%;background:var(--grad);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .sb-uname{font-size:12px;font-weight:600;flex:1;}
 .sb-logout{font-size:11px;color:var(--text3);transition:color 0.12s;}
 .sb-logout:hover{color:var(--red);}
+
+/* export modal */
+#export-modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:1200;padding:24px;}
+#export-modal.show{display:flex;}
+.export-card{width:min(760px,100%);background:var(--bg2);border:1px solid var(--border2);border-radius:18px;box-shadow:var(--shadow);padding:18px;}
+.export-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.export-title{font-size:16px;font-weight:700;letter-spacing:-0.2px;}
+.export-sub{font-size:12px;color:var(--text2);margin-top:2px;}
+.export-close{width:32px;height:32px;border-radius:9px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.export-close:hover{background:var(--bg4);color:var(--text);}
+.export-area{width:100%;min-height:360px;max-height:56vh;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:13px;line-height:1.6;padding:14px;resize:vertical;outline:none;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+.export-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;}
+.export-status{font-size:12px;color:var(--text2);}
+.export-btn-row{display:flex;gap:8px;}
+.export-action{padding:9px 12px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:12px;font-weight:600;transition:all 0.15s;}
+.export-action:hover{background:var(--bg4);}
+.export-action.primary{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 2px 10px rgba(0,120,255,0.35);}
+.export-action.primary:hover{background:var(--grad-h);}
 
 /* ══════════════════ MAIN ══════════════════ */
 #main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
@@ -464,6 +488,9 @@ input,textarea{font-family:inherit;}
     </div>
 
     <div class="sb-foot">
+      <button class="export-btn" onclick="openExportModal()">
+        <span>⬇️</span><span>Exporter le résumé</span>
+      </button>
       <div class="sb-user-row">
         <div class="sb-avatar" id="sb-avatar">V</div>
         <div style="flex:1">
@@ -595,6 +622,28 @@ input,textarea{font-family:inherit;}
   </div><!-- /main -->
 </div><!-- /app -->
 
+<div id="export-modal">
+  <div class="export-card">
+    <div class="export-head">
+      <div>
+        <div class="export-title">Résumé exportable</div>
+        <div class="export-sub">Copie-le ou télécharge-le en Markdown pour le réutiliser ailleurs.</div>
+      </div>
+      <button class="export-close" onclick="closeExportModal()">✕</button>
+    </div>
+    <textarea id="export-output" class="export-area" readonly></textarea>
+    <div class="export-actions">
+      <div class="export-status" id="export-status">Aucun résumé généré.</div>
+      <div class="export-btn-row">
+        <button class="export-action" onclick="copyExportSummary()">Copier</button>
+        <button class="export-action" onclick="downloadExportDocx()">Télécharger .docx</button>
+        <button class="export-action primary" onclick="downloadExportSummary()">Télécharger .md</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.js"></script>
 <script>
 'use strict';
 
@@ -602,7 +651,7 @@ input,textarea{font-family:inherit;}
    CONFIG — change password monthly
 ───────────────────────────────────── */
 const PASSWORDS = ["VISION-AVRIL-2026","DEMO"];
-const API_KEY = 'YOUR_API_KEY_HERE'; // ← paste your sk-ant-... key here
+const API_KEY = ''; // configure through a secure server-side proxy before deployment
 
 /* ─────────────────────────────────────
    STATE
@@ -618,6 +667,7 @@ let chats = {};
 let userCurrency = '€';
 let userMoneyGoal = '1 000 €';
 let favorites = new Set();
+let sidebarOpen = {favorites:false};
 
 /* ─────────────────────────────────────
    GEO / CURRENCY DETECTION
@@ -662,8 +712,8 @@ const phaseMap = {
   analyse:'Phase 3 — Scale',automatisation:'Phase 3 — Scale',upsell:'Phase 3 — Scale',pub:'Phase 3 — Scale',systeme:'Phase 3 — Scale'
 };
 
-function save(){try{localStorage.setItem('lvpro_c',JSON.stringify(chats));localStorage.setItem('lvpro_f',JSON.stringify(folders));localStorage.setItem('lvpro_n',userName);localStorage.setItem('lvpro_d',JSON.stringify([...doneMods]));localStorage.setItem('lvpro_fav',JSON.stringify([...favorites]));}catch(e){}}
-function load(){try{const c=localStorage.getItem('lvpro_c');if(c)chats=JSON.parse(c);const f=localStorage.getItem('lvpro_f');if(f)folders=JSON.parse(f);const n=localStorage.getItem('lvpro_n');if(n)userName=n;const d=localStorage.getItem('lvpro_d');if(d)doneMods=new Set(JSON.parse(d));const fav=localStorage.getItem('lvpro_fav');if(fav)favorites=new Set(JSON.parse(fav));}catch(e){}}
+function save(){try{localStorage.setItem('lvpro_c',JSON.stringify(chats));localStorage.setItem('lvpro_f',JSON.stringify(folders));localStorage.setItem('lvpro_n',userName);localStorage.setItem('lvpro_d',JSON.stringify([...doneMods]));localStorage.setItem('lvpro_fav',JSON.stringify([...favorites]));localStorage.setItem('lvpro_cur',currentChatId||'home');}catch(e){}}
+function load(){try{const c=localStorage.getItem('lvpro_c');if(c)chats=JSON.parse(c);const f=localStorage.getItem('lvpro_f');if(f)folders=JSON.parse(f);const n=localStorage.getItem('lvpro_n');if(n)userName=n;const d=localStorage.getItem('lvpro_d');if(d)doneMods=new Set(JSON.parse(d));const fav=localStorage.getItem('lvpro_fav');if(fav)favorites=new Set(JSON.parse(fav));currentChatId=localStorage.getItem('lvpro_cur')||null;}catch(e){}}
 
 function applyCountryPick(){
   const val=document.getElementById('user-country').value;
@@ -706,6 +756,22 @@ function applyUser(){
   if(g)g.textContent=greeting();
 }
 
+function enterApp(){
+  document.getElementById('lock').classList.add('gone');
+  document.getElementById('app').classList.add('show');
+  localStorage.setItem('lvpro_logged_in','1');
+  save();
+  applyUser();
+  renderSidebar();
+  buildChips();
+  updateProgress();
+  if(currentChatId && currentChatId!=='home' && chats[currentChatId]){
+    openChat(currentChatId);
+  } else {
+    goHome();
+  }
+}
+
 function tryLogin(){
   const name=document.getElementById('uname').value.trim();
   const v=document.getElementById('pwd').value.trim().toUpperCase();
@@ -713,11 +779,9 @@ function tryLogin(){
   if(!name){e.textContent="Entre ton prénom pour continuer.";setTimeout(()=>e.textContent='',2500);return;}
   if(PASSWORDS.includes(v)){
     userName=name.charAt(0).toUpperCase()+name.slice(1);
-    document.getElementById('lock').classList.add('gone');
-    document.getElementById('app').classList.add('show');
     load();
     userName=name.charAt(0).toUpperCase()+name.slice(1);
-    save(); applyUser(); renderSidebar(); goHome(); buildChips(); updateProgress();
+    enterApp();
   } else {
     e.textContent="Code incorrect. Vérifie le code envoyé ce mois-ci.";
     document.getElementById('pwd').value='';
@@ -730,6 +794,8 @@ function logout(){
   document.getElementById('pwd').value='';
   document.getElementById('uname').value='';
   currentChatId=null;
+  localStorage.removeItem('lvpro_logged_in');
+  localStorage.removeItem('lvpro_cur');
 }
 
 /* ─────────────────────────────────────
@@ -738,33 +804,40 @@ function logout(){
 function renderSidebar(){
   const area=document.getElementById('history-area');
   area.innerHTML='';
-
-  // Favorites section
-  const favChats=Object.values(chats).filter(c=>favorites.has(c.id)).sort((a,b)=>b.ts-a.ts);
+  const allChats=Object.values(chats).sort((a,b)=>b.ts-a.ts);
+  const recentChats=allChats.slice(0,3);
+  const favChats=allChats.filter(c=>favorites.has(c.id));
   if(favChats.length>0){
-    const lbl=el('div','sb-section');lbl.textContent='⭐ Favoris';area.appendChild(lbl);
-    favChats.forEach(c=>area.appendChild(chatItem(c)));
+    area.appendChild(sectionBlock('favorites','⭐','Favoris',favChats));
   }
-
-  const foldered=new Set(Object.values(folders).flat());
-  const ungrouped=Object.values(chats).filter(c=>!foldered.has(c.id)).sort((a,b)=>b.ts-a.ts);
-
-  if(ungrouped.length>0){
-    const lbl=el('div','sb-section');lbl.textContent='Récents';area.appendChild(lbl);
-    ungrouped.slice(0,10).forEach(c=>area.appendChild(chatItem(c)));
-  }
-
   Object.entries(folders).forEach(([fname,ids])=>{
     const fc=ids.map(i=>chats[i]).filter(Boolean);
     if(!fc.length)return;
-    const sec=el('div');
-    const hdr=el('button','folder-hdr open');
-    hdr.innerHTML=`<span>📁</span><span>${fname}</span><span class="folder-arrow">›</span>`;
-    const body=el('div','folder-body show');
-    hdr.onclick=()=>{hdr.classList.toggle('open');body.classList.toggle('show');};
-    fc.sort((a,b)=>b.ts-a.ts).forEach(c=>body.appendChild(chatItem(c)));
-    sec.appendChild(hdr);sec.appendChild(body);area.appendChild(sec);
+    area.appendChild(sectionBlock(fname,'📁',fname,fc.sort((a,b)=>b.ts-a.ts)));
   });
+  if(recentChats.length>0){
+    const lbl=el('div','sb-section');lbl.textContent='Récents';area.appendChild(lbl);
+    const body=el('div','recent-body');
+    recentChats.forEach(c=>body.appendChild(chatItem(c)));
+    area.appendChild(body);
+  }
+}
+
+function sectionBlock(key,icon,label,chatsInSection){
+  const sec=el('div');
+  const open=!!sidebarOpen[key];
+  const hdr=el('button','folder-hdr'+(open?' open':''));
+  hdr.innerHTML=`<span>${icon}</span><span>${label}</span><span class="folder-arrow">›</span>`;
+  const body=el('div','folder-body'+(open?' show':''));
+  hdr.onclick=()=>{
+    sidebarOpen[key]=!sidebarOpen[key];
+    hdr.classList.toggle('open',sidebarOpen[key]);
+    body.classList.toggle('show',sidebarOpen[key]);
+  };
+  chatsInSection.forEach(c=>body.appendChild(chatItem(c)));
+  sec.appendChild(hdr);
+  sec.appendChild(body);
+  return sec;
 }
 
 function chatItem(chat){
@@ -772,14 +845,26 @@ function chatItem(chat){
   btn.dataset.id=chat.id;
   const icon=MODS[chat.module]?MODS[chat.module].title.split(' ')[0]:'💬';
   const isFav=favorites.has(chat.id);
-  btn.innerHTML=`<span class="ci-icon">${icon}</span><span class="ci-label">${chat.title}</span><span class="ci-fav${isFav?' active':''}" onclick="toggleFavorite('${chat.id}',event)">${isFav?'⭐':'☆'}</span><span class="ci-del" onclick="delChat('${chat.id}',event)">✕</span>`;
-  btn.onclick=e=>{if(!e.target.classList.contains('ci-del')&&!e.target.classList.contains('ci-fav'))openChat(chat.id);};
+  btn.innerHTML=`<span class="ci-icon">${icon}</span><span class="ci-label">${chat.title}</span><span class="ci-actions"><span class="ci-act ci-rename" onclick="renameChat('${chat.id}',event)" title="Renommer">✎</span><span class="ci-act ci-fav${isFav?' active':''}" onclick="toggleFavorite('${chat.id}',event)" title="Favori">${isFav?'★':'☆'}</span><span class="ci-del" onclick="delChat('${chat.id}',event)" title="Supprimer">✕</span></span>`;
+  btn.onclick=e=>{if(!e.target.classList.contains('ci-del')&&!e.target.classList.contains('ci-fav')&&!e.target.classList.contains('ci-rename'))openChat(chat.id);};
   return btn;
 }
 
 function toggleFavorite(id,e){
   e.stopPropagation();
   if(favorites.has(id))favorites.delete(id);else favorites.add(id);
+  save();renderSidebar();
+}
+
+function renameChat(id,e){
+  e.stopPropagation();
+  const chat=chats[id];
+  if(!chat)return;
+  const next=prompt('Nouveau nom du chat :',chat.title);
+  if(next===null)return;
+  const title=next.trim().replace(/\s+/g,' ');
+  if(!title)return;
+  chat.title=title.slice(0,60);
   save();renderSidebar();
 }
 
@@ -792,6 +877,7 @@ function setActive(id){
 function delChat(id,e){
   e.stopPropagation();
   delete chats[id];
+  favorites.delete(id);
   Object.keys(folders).forEach(f=>{folders[f]=folders[f].filter(i=>i!==id);});
   if(currentChatId===id)goHome();
   save();renderSidebar();
@@ -1004,6 +1090,289 @@ async function sendMsg(){
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
 function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,180)+'px';}
 
+function buildSharedContext(currentChatId){
+  const memoryOrder=['niche','avatar','douleurs','offre','positionnement','tunnel','emails_setup','contenu','copywriting','campagne','objections','landing','analyse','automatisation','upsell','pub','systeme'];
+  const snippets=[];
+
+  memoryOrder.forEach(modKey=>{
+    const related=Object.values(chats)
+      .filter(c=>c.id!==currentChatId&&c.module===modKey&&c.messages?.length)
+      .sort((a,b)=>b.ts-a.ts)[0];
+    if(!related)return;
+
+    const userNotes=related.messages
+      .filter(m=>m.role==='user'&&typeof m.content==='string'&&m.content&&m.content!=='[image]')
+      .map(m=>m.content.trim())
+      .filter(Boolean)
+      .slice(-2)
+      .join(' | ');
+
+    if(!userNotes && !related.title)return;
+    snippets.push(`- ${MODS[modKey].title} : ${userNotes || related.title}`);
+  });
+
+  if(!snippets.length)return '';
+
+  return `CONTEXTE MÉMOIRE — informations déjà données par l'utilisateur dans d'autres modules. Utilise-les comme base de travail pour éviter de lui faire répéter les mêmes éléments. Si une information semble floue ou contradictoire, clarifie-la brièvement au lieu de repartir de zéro.\n\n${snippets.join('\n')}\n\n`;
+}
+
+function exportMemoryLines(currentChatId){
+  const memoryOrder=['niche','avatar','douleurs','offre','positionnement','tunnel','emails_setup','contenu','copywriting','campagne','objections','landing','analyse','automatisation','upsell','pub','systeme'];
+  return memoryOrder.map(modKey=>{
+    const related=Object.values(chats)
+      .filter(c=>c.id!==currentChatId&&c.module===modKey&&c.messages?.length)
+      .sort((a,b)=>b.ts-a.ts)[0];
+    if(!related)return null;
+    const userNotes=related.messages
+      .filter(m=>m.role==='user'&&typeof m.content==='string'&&m.content&&m.content!=='[image]')
+      .map(m=>m.content.trim())
+      .filter(Boolean)
+      .slice(-2)
+      .join(' | ');
+    const note=userNotes || related.title;
+    return note?`- ${MODS[modKey].title}: ${note}`:null;
+  }).filter(Boolean);
+}
+
+function escapeMd(text){
+  return String(text||'').replace(/\r/g,'').trim();
+}
+
+function compactText(text,maxLen=900){
+  const clean=escapeMd(text)
+    .replace(/```[\s\S]*?```/g,'')
+    .replace(/\n{3,}/g,'\n\n')
+    .trim();
+  if(clean.length<=maxLen)return clean;
+  return clean.slice(0,maxLen).trim()+'…';
+}
+
+function escapeHtml(text){
+  return String(text||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+function formatExportDate(ts){
+  const d=new Date(ts||Date.now());
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function generateChatSummary(chat){
+  const userEntries=chat.messages.filter(m=>m.role==='user'&&typeof m.content==='string'&&m.content&&m.content!=='[image]');
+  const assistantEntries=chat.messages.filter(m=>m.role==='assistant'&&typeof m.content==='string'&&m.content);
+  const latestOutcome=assistantEntries[assistantEntries.length-1]?.content || 'Aucun résultat généré pour le moment.';
+  const latestUserInputs=userEntries.slice(-5).map(m=>`- ${compactText(m.content,220)}`);
+  const carryOver=exportMemoryLines(chat.id);
+  const moduleLabel=MODS[chat.module]?.title || chat.module;
+  const previousContextBlock=carryOver.length?carryOver.join('\n'):'- Aucun contexte inter-modules enregistré pour le moment.';
+  const outcomeBlock=compactText(latestOutcome,1400);
+
+  return [
+    `# Visionnaires Pro — Export de contexte`,
+    ``,
+    `## Module actuel`,
+    `- Date: ${formatExportDate(Date.now())}`,
+    `- Module: ${moduleLabel}`,
+    `- Chat: ${chat.title}`,
+    `- Utilisateur: ${userName || 'Visionnaire'}`,
+    ``,
+    `## Inputs utilisateur récents`,
+    ...(latestUserInputs.length?latestUserInputs:[`- Pas encore assez d'inputs utilisateur pour produire un résumé riche.`]),
+    ``,
+    `## Résultat / synthèse actuelle de VP`,
+    outcomeBlock,
+    ``,
+    `## Contexte déjà établi dans les autres modules`,
+    previousContextBlock,
+    ``,
+    `## Décisions / éléments à conserver`,
+    `- Conserver les éléments déjà validés dans les modules précédents.`,
+    `- Éviter de repartir de zéro si le contexte ci-dessus est encore valable.`,
+    `- Clarifier uniquement ce qui reste flou, contradictoire ou non décidé.`,
+    ``,
+    `## Prompt de reprise pour un autre module ou un autre LLM`,
+    '```md',
+    `Tu reprends un travail en cours sur Visionnaires Pro.`,
+    ``,
+    `Module actuel: ${moduleLabel}`,
+    `Chat actuel: ${chat.title}`,
+    `Date de l'export: ${formatExportDate(Date.now())}`,
+    ``,
+    `Contexte déjà établi dans les autres modules:`,
+    previousContextBlock,
+    ``,
+    `Ce que l'utilisateur a récemment dit dans ce module:`,
+    ...(latestUserInputs.length?latestUserInputs:[`- Pas encore assez d'inputs utilisateur.`]),
+    ``,
+    `Résultat / direction actuelle de VP:`,
+    outcomeBlock,
+    ``,
+    `Consigne:`,
+    `- Continue à partir de ce contexte sans repartir de zéro.`,
+    `- Garde les décisions déjà prises sauf si l'utilisateur les corrige.`,
+    `- Pose seulement les questions nécessaires pour faire avancer ce module.`,
+    '```',
+    ``,
+    `## Utilisation recommandée`,
+    `- Tu peux copier ce bloc dans le prochain module pour garder le contexte.`,
+    `- Tu peux aussi le coller dans un autre LLM, un doc, Notion, ou ton espace de travail.`,
+    ``
+  ].join('\n');
+}
+
+function summaryMarkdownToHtml(md){
+  const lines=String(md||'').split('\n');
+  const parts=[];
+  let inList=false;
+  let inCode=false;
+  let codeLines=[];
+
+  function closeList(){
+    if(inList){parts.push('</ul>');inList=false;}
+  }
+
+  lines.forEach(line=>{
+    if(line.startsWith('```')){
+      if(inCode){
+        parts.push(`<pre style="background:#f4f7fb;border:1px solid #d7dfeb;border-radius:10px;padding:14px;white-space:pre-wrap;font-family:Menlo,Consolas,monospace;font-size:12px;line-height:1.55;">${escapeHtml(codeLines.join('\n'))}</pre>`);
+        inCode=false;
+        codeLines=[];
+      } else {
+        closeList();
+        inCode=true;
+      }
+      return;
+    }
+
+    if(inCode){
+      codeLines.push(line);
+      return;
+    }
+
+    if(!line.trim()){
+      closeList();
+      parts.push('<p style="margin:0 0 10px 0;"></p>');
+      return;
+    }
+
+    if(line.startsWith('# ')){
+      closeList();
+      parts.push(`<h1 style="font-size:24px;margin:0 0 12px 0;color:#111827;">${escapeHtml(line.slice(2))}</h1>`);
+      return;
+    }
+
+    if(line.startsWith('## ')){
+      closeList();
+      parts.push(`<h2 style="font-size:18px;margin:22px 0 10px 0;color:#111827;">${escapeHtml(line.slice(3))}</h2>`);
+      return;
+    }
+
+    if(line.startsWith('- ')){
+      if(!inList){parts.push('<ul style="margin:0 0 12px 18px;padding:0;color:#1f2937;">');inList=true;}
+      parts.push(`<li style="margin:0 0 6px 0;line-height:1.55;">${escapeHtml(line.slice(2))}</li>`);
+      return;
+    }
+
+    closeList();
+    parts.push(`<p style="margin:0 0 10px 0;line-height:1.6;color:#1f2937;">${escapeHtml(line)}</p>`);
+  });
+
+  closeList();
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Visionnaires Pro Export</title>
+</head>
+<body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:28px;color:#111827;">
+  ${parts.join('\n')}
+</body>
+</html>`;
+}
+
+function openExportModal(){
+  const modal=document.getElementById('export-modal');
+  const output=document.getElementById('export-output');
+  const status=document.getElementById('export-status');
+  if(!currentChatId||!chats[currentChatId]){
+    status.textContent="Ouvre d'abord un chat/module avant d'exporter un résumé.";
+    output.value='';
+    modal.classList.add('show');
+    return;
+  }
+  const md=generateChatSummary(chats[currentChatId]);
+  output.value=md;
+  status.textContent='Résumé prêt à copier ou télécharger.';
+  modal.classList.add('show');
+}
+
+function closeExportModal(){
+  document.getElementById('export-modal').classList.remove('show');
+}
+
+async function copyExportSummary(){
+  const text=document.getElementById('export-output').value.trim();
+  const status=document.getElementById('export-status');
+  if(!text){status.textContent='Aucun résumé à copier.';return;}
+  try{
+    await navigator.clipboard.writeText(text);
+    status.textContent='Résumé copié.';
+  }catch(e){
+    status.textContent='Copie impossible automatiquement. Sélectionne le texte et copie-le manuellement.';
+  }
+}
+
+function downloadExportSummary(){
+  const text=document.getElementById('export-output').value.trim();
+  const status=document.getElementById('export-status');
+  if(!text){status.textContent='Aucun résumé à télécharger.';return;}
+  const chat=chats[currentChatId];
+  const modSlug=(chat?.module||'resume').replace(/[^a-z0-9_-]/gi,'-').toLowerCase();
+  const fileName=`visionnaires-${modSlug}-${formatExportDate(Date.now())}.md`;
+  const blob=new Blob([text],{type:'text/markdown;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  status.textContent=`Fichier téléchargé : ${fileName}`;
+}
+
+function downloadExportDocx(){
+  const text=document.getElementById('export-output').value.trim();
+  const status=document.getElementById('export-status');
+  if(!text){status.textContent='Aucun résumé à télécharger.';return;}
+  if(!window.htmlDocx || typeof window.htmlDocx.asBlob!=='function'){
+    status.textContent='Export .docx indisponible pour le moment. Recharge la page puis réessaie.';
+    return;
+  }
+  const chat=chats[currentChatId];
+  const modSlug=(chat?.module||'resume').replace(/[^a-z0-9_-]/gi,'-').toLowerCase();
+  const fileName=`visionnaires-${modSlug}-${formatExportDate(Date.now())}.docx`;
+  const html=summaryMarkdownToHtml(text);
+  const blob=window.htmlDocx.asBlob(html);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  status.textContent=`Fichier téléchargé : ${fileName}`;
+}
+
 /* ─────────────────────────────────────
    CLAUDE API
 ───────────────────────────────────── */
@@ -1035,7 +1404,7 @@ async function callClaude(chatId){
         "anthropic-version":"2023-06-01",
         "anthropic-dangerous-direct-browser-access":"true"
       },
-      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,system:getCurrencyPrefix()+mod.systemPrompt,messages:msgs})
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,system:getCurrencyPrefix()+buildSharedContext(chatId)+mod.systemPrompt,messages:msgs})
     });
     const data=await res.json();
     if(!res.ok){
@@ -1260,20 +1629,31 @@ FORMAT CHOICES :
 \`\`\`
 ANALYSE D'IMAGES : Si image d'offre actuelle ou concurrente, analyse et propose des améliorations concrètes.
 FRAMEWORK : $100M Offers (Alex Hormozi) — une offre Grand Slam se vend au prix où la refuser semble stupide.
+PRIORITÉ ABSOLUE : Une bonne offre commence par un problème spécifique à résoudre. Tu dois aider l'utilisateur à identifier, dans sa niche, un problème urgent, coûteux, frustrant ou bloquant que son client veut réellement résoudre.
+RAPPEL FONDAMENTAL : Les gens n'achètent pas une offre "intéressante". Ils achètent une solution claire à un problème douloureux pour obtenir un résultat désiré.
+ORDRE DE TRAVAIL : D'abord la clarté sur le problème, ensuite la transformation désirée, puis seulement la construction de l'offre avec le framework de Hormozi.
 ÉTAPES :
-1. Quel résultat précis ton client obtient-il ? (Dream Outcome)
-2. Construis le Value Stack : liste chaque composant avec sa valeur perçue
-3. Maximise la valeur : résultat rêvé × probabilité de succès ÷ délai × effort client
-4. Ajoute des bonus qui valent plus que l'offre principale
-5. Réduis le risque : garantie résultat, remboursement, ou "done-with-you"
-6. Crée urgence/rareté réelle (places, bonus qui expire)
+1. Identifie le problème spécifique que l'offre résout
+2. Clarifie le résultat désiré / transformation promise
+3. Vérifie que ce problème est assez douloureux, fréquent, coûteux ou urgent pour être acheté
+4. Une fois le problème validé, construis l'offre avec le framework $100M Offers
+5. Définis la solution : ce que contient l'offre pour faire passer le client du problème au résultat
+6. Construis le Value Stack : liste chaque composant avec sa valeur perçue
+7. Maximise la valeur : résultat rêvé × probabilité de succès ÷ délai × effort client
+8. Ajoute des bonus qui valent plus que l'offre principale
+9. Réduis le risque : garantie résultat, remboursement, ou "done-with-you"
+10. Crée urgence/rareté réelle (places, bonus qui expire)
 SÉQUENCE :
-1. Tu veux vendre quoi : service, coaching, ou produit digital (formation, template…) ?
-2. Quel résultat précis ton client obtient en combien de temps ?
-3. Qu'est-ce qui rend ton approche différente ou plus rapide ?
-4. Quel prix envisages-tu ? (je te dirai si c'est cohérent)
+1. Dans ta niche, quel problème précis veux-tu résoudre pour ton client ?
+2. Pourquoi ce problème est-il suffisamment important pour qu'il paie pour le résoudre maintenant ?
+3. Quel résultat concret ton client veut-il obtenir à la place, et en combien de temps ?
+4. Tu veux vendre quoi : service, coaching, ou produit digital (formation, template…) ?
+5. Qu'est-ce qui rend ton approche différente, plus simple ou plus rapide ?
+6. Quel prix envisages-tu ? (je te dirai si c'est cohérent)
+SI L'UTILISATEUR RESTE FLOU : force-le à préciser. Refuse les formulations vagues comme "aider les gens à se sentir mieux" ou "accompagner les entrepreneurs". Demande toujours : quel problème précis ? pour qui exactement ? quel résultat mesurable ?
+TANT QUE LE PROBLÈME N'EST PAS CLAIR, ne passe pas à la construction complète de l'offre.
 Si le prix est trop bas pour la valeur proposée, dis-le directement.
-RÉSULTAT : Fiche offre — nom, promesse, Value Stack chiffré, garantie, prix recommandé.`},
+RÉSULTAT : Fiche offre — problème spécifique, client ciblé, résultat désiré, promesse, mécanisme de solution, Value Stack chiffré, garantie, prix recommandé.`},
 
   positionnement:{title:"🏆 Positionnement unique",desc:"Phase 1 · Ce qui te différencie",badge:"Phase 1 — Construis",badgeClass:"p1",
     quickReplies:[],
@@ -1546,6 +1926,10 @@ RÉSULTAT : Bilan complet + plan des 90 prochains jours avec objectifs chiffrés
 };
 
 buildChips();
+load();
+if(localStorage.getItem('lvpro_logged_in')==='1' && userName){
+  enterApp();
+}
 </script>
 </body>
 </html>
