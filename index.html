@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visionnaires Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   VISIONNAIRES PRO — DESIGN TOKENS
+   Dark  → #000000 / #1C1C1E
+   Blue  → #0088FF → #00D8FF gradient
+══════════════════════════════════════ */
+:root {
+  --bg:        #000000;
+  --bg2:       #1C1C1E;
+  --bg3:       #2C2C2E;
+  --bg4:       #3A3A3C;
+  --border:    rgba(255,255,255,0.08);
+  --border2:   rgba(255,255,255,0.14);
+  --text:      #F5F5F7;
+  --text2:     #86868B;
+  --text3:     #48484A;
+  --accent:    #0088FF;
+  --accent-h:  #00AAFF;
+  --accent-bg: rgba(0,136,255,0.1);
+  --accent-bd: rgba(0,136,255,0.25);
+  --green:     #30D158;
+  --orange:    #FF9F0A;
+  --red:       #FF453A;
+  --phase1:    #0A84FF;
+  --phase2:    #FF9F0A;
+  --phase3:    #30D158;
+  --r:         13px;
+  --r-sm:      9px;
+  --sidebar-w: 255px;
+  --shadow:    0 8px 32px rgba(0,0,0,0.6);
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.4);
+  --grad:      linear-gradient(135deg, #0055EE 0%, #00AAFF 100%);
+  --grad-h:    linear-gradient(135deg, #0066FF 0%, #00CCFF 100%);
+}
+[data-theme="light"] {
+  --bg:        #F5F5F7;
+  --bg2:       #FFFFFF;
+  --bg3:       #F5F5F7;
+  --bg4:       #E8E8ED;
+  --border:    rgba(0,0,0,0.08);
+  --border2:   rgba(0,0,0,0.14);
+  --text:      #1D1D1F;
+  --text2:     #6E6E73;
+  --text3:     #AEAEB2;
+  --accent:    #0077FF;
+  --accent-h:  #0099FF;
+  --accent-bg: rgba(0,119,255,0.07);
+  --accent-bd: rgba(0,119,255,0.2);
+  --green:     #28CD41;
+  --orange:    #FF9500;
+  --red:       #FF3B30;
+  --phase1:    #007AFF;
+  --phase2:    #FF9500;
+  --phase3:    #28CD41;
+  --shadow:    0 4px 20px rgba(0,0,0,0.12);
+  --shadow-sm: 0 1px 6px rgba(0,0,0,0.08);
+  --grad:      linear-gradient(135deg, #0055EE 0%, #0099FF 100%);
+  --grad-h:    linear-gradient(135deg, #0066FF 0%, #00BBFF 100%);
+}
+
+/* ══════════════════ BASE ══════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;overflow:hidden;transition:background 0.2s,color 0.2s;-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+input,textarea{font-family:inherit;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px;}
+
+/* ══════════════════ LOCK SCREEN ══════════════════ */
+#lock{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;}
+#lock.gone{display:none;}
+.lock-card{width:340px;background:var(--bg2);border-radius:20px;padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:var(--shadow);border:1px solid var(--border2);}
+.lock-icon{
+  width:72px;height:72px;border-radius:20px;
+  background:linear-gradient(145deg,rgba(0,60,180,0.45),rgba(0,180,255,0.18));
+  border:1px solid rgba(0,160,255,0.35);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 32px rgba(0,150,255,0.4),0 4px 24px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.lock-title{font-size:20px;font-weight:700;letter-spacing:-0.3px;text-align:center;}
+.lock-sub{font-size:13px;color:var(--text2);text-align:center;line-height:1.55;}
+.lock-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:15px;padding:12px 16px;outline:none;transition:border 0.15s,box-shadow 0.15s;text-align:center;letter-spacing:0.04em;}
+.lock-input:focus{border-color:rgba(0,136,255,0.5);box-shadow:0 0 0 3px var(--accent-bg);}
+.lock-input::placeholder{color:var(--text3);}
+.lock-btn{width:100%;padding:12px;background:var(--grad);border-radius:10px;color:#fff;font-size:15px;font-weight:600;transition:all 0.15s;letter-spacing:-0.1px;box-shadow:0 2px 12px rgba(0,120,255,0.35);}
+.lock-btn:hover{background:var(--grad-h);transform:scale(1.01);box-shadow:0 4px 18px rgba(0,150,255,0.45);}
+.lock-btn:active{transform:scale(0.99);}
+.lock-err{font-size:12px;color:var(--red);min-height:14px;text-align:center;}
+.lock-hint{font-size:12px;color:var(--text3);text-align:center;}
+.home-greeting{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:-0.1px;margin-bottom:6px;opacity:0.9;}
+.lock-theme-btn{position:absolute;top:18px;right:18px;width:34px;height:34px;border-radius:50%;background:var(--bg2);border:1px solid var(--border2);color:var(--text2);font-size:15px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.lock-theme-btn:hover{background:var(--bg3);}
+
+/* ══════════════════ APP SHELL ══════════════════ */
+#app{display:none;width:100%;height:100vh;}
+#app.show{display:flex;}
+
+/* ══════════════════ SIDEBAR ══════════════════ */
+#sidebar{
+  width:var(--sidebar-w);height:100vh;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  flex-shrink:0;
+}
+.sb-head{padding:14px 12px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.sb-brand-row{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.sb-logo{width:30px;height:30px;border-radius:8px;background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-name{font-size:12.5px;font-weight:700;letter-spacing:-0.2px;}
+.sb-sub{font-size:9.5px;color:var(--text3);margin-top:1px;}
+.sb-actions{display:flex;gap:5px;margin-left:auto;}
+.sb-icon-btn{width:28px;height:28px;border-radius:7px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.sb-icon-btn:hover{background:var(--bg4);}
+.new-chat-btn{width:100%;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text2);font-size:12.5px;font-weight:500;display:flex;align-items:center;gap:6px;transition:all 0.15s;}
+.new-chat-btn:hover{background:var(--bg4);color:var(--text);}
+.sb-scroll{flex:1;overflow-y:auto;padding:8px 8px 4px;}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:0.06em;color:var(--text3);text-transform:uppercase;padding:8px 6px 3px;}
+.chat-item{width:100%;display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:var(--r-sm);cursor:pointer;transition:all 0.12s;text-align:left;border:1px solid transparent;}
+.chat-item:hover{background:var(--bg3);}
+.chat-item.active{background:var(--accent-bg);border-color:var(--accent-bd);}
+.ci-icon{font-size:12px;flex-shrink:0;opacity:0.6;}
+.chat-item.active .ci-icon{opacity:1;}
+.ci-label{font-size:12px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chat-item.active .ci-label{color:var(--text);font-weight:500;}
+.ci-del{display:none;font-size:11px;color:var(--text3);padding:1px 3px;border-radius:3px;flex-shrink:0;transition:color 0.12s;}
+.chat-item:hover .ci-del{display:block;}
+.ci-del:hover{color:var(--red);}
+.folder-hdr{width:100%;display:flex;align-items:center;gap:6px;padding:5px 6px;border-radius:var(--r-sm);cursor:pointer;color:var(--text2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;transition:background 0.12s;}
+.folder-hdr:hover{background:var(--bg3);}
+.folder-arrow{margin-left:auto;font-size:9px;transition:transform 0.18s;}
+.folder-hdr.open .folder-arrow{transform:rotate(90deg);}
+.folder-body{display:none;padding-left:4px;}
+.folder-body.show{display:block;}
+.sb-foot{padding:10px 12px 12px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-user-row{display:flex;align-items:center;gap:9px;}
+.sb-avatar{width:26px;height:26px;border-radius:50%;background:var(--grad);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-uname{font-size:12px;font-weight:600;flex:1;}
+.sb-logout{font-size:11px;color:var(--text3);transition:color 0.12s;}
+.sb-logout:hover{color:var(--red);}
+
+/* ══════════════════ MAIN ══════════════════ */
+#main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
+
+/* topbar */
+#topbar{
+  height:52px;padding:0 24px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg2);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+  backdrop-filter:blur(20px);
+}
+.tb-title{font-size:14px;font-weight:600;letter-spacing:-0.2px;}
+.tb-desc{font-size:11px;color:var(--text2);margin-top:1px;}
+.phase-pill{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:0.02em;}
+.phase-pill.p1{background:rgba(10,132,255,0.1);color:var(--phase1);border:1px solid rgba(10,132,255,0.2);}
+.phase-pill.p2{background:rgba(255,159,10,0.1);color:var(--phase2);border:1px solid rgba(255,159,10,0.2);}
+.phase-pill.p3{background:rgba(48,209,88,0.1);color:var(--phase3);border:1px solid rgba(48,209,88,0.2);}
+.phase-pill.home{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-bd);}
+
+/* ══════════════════ HOME PAGE ══════════════════ */
+#home{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:0 24px 40px;}
+
+.home-hero{
+  width:100%;max-width:680px;
+  padding:60px 0 40px;
+  display:flex;flex-direction:column;align-items:center;
+  gap:0;
+}
+.home-hero h1{
+  font-size:32px;font-weight:700;
+  letter-spacing:-0.6px;
+  text-align:center;
+  margin-bottom:8px;
+  line-height:1.2;
+}
+.home-hero p{font-size:15px;color:var(--text2);text-align:center;margin-bottom:28px;line-height:1.5;}
+
+.hero-chat-box{
+  width:100%;
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:box-shadow 0.2s, border-color 0.2s;
+}
+.hero-chat-box:focus-within{
+  border-color:rgba(0,136,255,0.4);
+  box-shadow:0 0 0 4px var(--accent-bg), var(--shadow);
+}
+.hero-textarea{
+  width:100%;background:transparent;border:none;
+  padding:20px 22px 0;
+  font-size:15px;color:var(--text);
+  resize:none;outline:none;
+  min-height:80px;max-height:200px;
+  line-height:1.6;
+}
+.hero-textarea::placeholder{color:var(--text3);}
+.hero-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px 14px;gap:8px;
+}
+.hero-tools{display:flex;gap:6px;}
+.hero-tool{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 11px;border-radius:8px;
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text2);font-size:12px;font-weight:500;
+  transition:all 0.15s;
+}
+.hero-tool:hover{background:var(--bg4);color:var(--text);}
+.hero-img-chip{display:none;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;background:var(--accent-bg);border:1px solid var(--accent-bd);color:var(--accent);font-size:12px;}
+.hero-img-chip.show{display:flex;}
+.hero-img-chip button{color:var(--text3);font-size:13px;transition:color 0.12s;}
+.hero-img-chip button:hover{color:var(--red);}
+.hero-send{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--grad);color:#fff;
+  font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;flex-shrink:0;
+  box-shadow:0 2px 10px rgba(0,120,255,0.35);
+}
+.hero-send:hover{background:var(--grad-h);transform:scale(1.04);box-shadow:0 4px 16px rgba(0,150,255,0.45);}
+.hero-send:active{transform:scale(0.97);}
+
+.home-below{width:100%;max-width:680px;}
+.home-label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px;margin-top:28px;}
+.sug-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.sug-btn{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 14px;
+  text-align:left;cursor:pointer;transition:all 0.18s;
+}
+.sug-btn:hover{border-color:var(--accent-bd);background:var(--accent-bg);transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+.sug-btn .sb-icon{font-size:18px;margin-bottom:7px;display:block;}
+.sug-btn .sb-title{font-size:12.5px;font-weight:600;margin-bottom:3px;display:block;letter-spacing:-0.1px;color:var(--text);}
+.sug-btn .sb-desc{font-size:11px;color:var(--text2);line-height:1.45;display:block;}
+.chips-row{display:flex;flex-wrap:wrap;gap:7px;}
+.mod-chip{
+  padding:6px 13px;border-radius:20px;
+  background:var(--bg2);border:1px solid var(--border);
+  color:var(--text2);font-size:12px;font-weight:500;
+  cursor:pointer;transition:all 0.14s;
+}
+.mod-chip:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ══════════════════ CHAT PAGE ══════════════════ */
+#chat-pg{display:none;flex:1;flex-direction:column;overflow:hidden;}
+#chat-pg.show{display:flex;}
+#chat-area{flex:1;overflow-y:auto;padding:24px 28px;display:flex;flex-direction:column;gap:16px;}
+
+/* messages */
+.msg{display:flex;gap:10px;animation:rise 0.18s ease;}
+@keyframes rise{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+.msg.user{flex-direction:row-reverse;}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.av.ai{background:var(--grad);color:#fff;}
+.av.user{background:var(--bg4);color:var(--text);font-size:14px;}
+.bub{max-width:74%;padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.65;word-break:break-word;}
+.msg.ai .bub{background:var(--bg2);border:1px solid var(--border);border-bottom-left-radius:5px;color:var(--text);}
+.msg.user .bub{background:var(--grad);color:#fff;border-bottom-right-radius:5px;}
+.msg.user .bub strong{color:#fff;}
+.bub strong{color:var(--accent-h);}
+.bub ul{padding-left:16px;margin:6px 0;display:flex;flex-direction:column;gap:4px;}
+.bub li{color:inherit;opacity:0.85;}
+
+/* image bubble */
+.img-bub{max-width:74%;border-radius:16px;overflow:hidden;border:1px solid var(--border);}
+.img-bub img{width:100%;max-height:280px;object-fit:cover;display:block;}
+.img-bub .img-lbl{font-size:11px;color:var(--text2);padding:6px 11px;background:var(--bg2);}
+
+/* typing */
+.typing{display:flex;gap:4px;padding:2px 0;}
+.typing span{width:6px;height:6px;background:var(--text3);border-radius:50%;animation:dot 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;} .typing span:nth-child(3){animation-delay:.4s;}
+@keyframes dot{0%,80%,100%{opacity:.25;transform:scale(.8);}40%{opacity:1;transform:scale(1);}}
+
+/* dashboards */
+.dash-wrap{max-width:100%;margin:2px 0;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:8px;margin-bottom:9px;}
+.kpi-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:13px 12px;text-align:center;}
+.kpi-val{font-size:20px;font-weight:700;letter-spacing:-0.4px;}
+.kpi-lbl{font-size:10px;color:var(--text2);margin-top:3px;text-transform:uppercase;letter-spacing:0.05em;}
+.kpi-trend{font-size:11px;margin-top:3px;font-weight:500;}
+.kpi-trend.up{color:var(--green);} .kpi-trend.down{color:var(--red);} .kpi-trend.flat{color:var(--text3);}
+.bar-chart{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;}
+.bar-ttl{font-size:10.5px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:11px;}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.bar-lbl{font-size:11px;color:var(--text2);width:90px;flex-shrink:0;text-align:right;}
+.bar-track{flex:1;background:var(--bg4);border-radius:4px;height:7px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;transition:width .7s ease;}
+.bar-val{font-size:11px;color:var(--text);width:36px;flex-shrink:0;}
+.reco-box{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:8px;}
+.reco-ttl{font-size:10.5px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:9px;}
+.reco-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13px;line-height:1.5;}
+.reco-n{background:var(--grad);color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+
+/* ══════════════════ INPUT AREA ══════════════════ */
+#input-area{padding:12px 24px 16px;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0;}
+.qbtns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.qbtn{padding:5px 12px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:12px;font-weight:500;transition:all 0.13s;}
+.qbtn:hover{border-color:var(--accent);color:var(--accent);}
+.img-chip{display:none;align-items:center;gap:7px;background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:8px;padding:5px 10px;font-size:12px;color:var(--accent);margin-bottom:7px;}
+.img-chip.show{display:flex;}
+.img-chip button{color:var(--text3);font-size:13px;transition:color 0.12s;}
+.img-chip button:hover{color:var(--red);}
+.input-row{display:flex;gap:8px;align-items:flex-end;}
+#user-input{
+  flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:13px;
+  color:var(--text);font-size:14px;padding:11px 14px;
+  resize:none;min-height:46px;max-height:130px;outline:none;
+  transition:border 0.15s, box-shadow 0.15s;line-height:1.5;
+}
+#user-input:focus{border-color:rgba(0,136,255,0.45);box-shadow:0 0 0 3px var(--accent-bg);}
+#user-input::placeholder{color:var(--text3);}
+.ia-btn{
+  width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:17px;transition:all 0.14s;flex-shrink:0;
+  background:var(--bg3);border:1px solid var(--border);color:var(--text2);
+}
+.ia-btn:hover{background:var(--bg4);color:var(--text);}
+.ia-btn.send{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 2px 10px rgba(0,120,255,0.35);}
+.ia-btn.send:hover{background:var(--grad-h);box-shadow:0 4px 16px rgba(0,150,255,0.45);}
+.ia-btn:disabled{opacity:0.4;cursor:default;transform:none;}
+#img-file{display:none;}
+#home-img-file{display:none;}
+
+/* ══════════════════ PROGRESS ══════════════════ */
+.prog-section{width:100%;max-width:680px;margin-top:28px;margin-bottom:4px;}
+.prog-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.prog-label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;}
+.prog-pct{font-size:11px;font-weight:600;color:var(--text2);}
+.prog-track{width:100%;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:10px;}
+.prog-fill{height:100%;background:var(--grad);border-radius:3px;transition:width 0.6s ease;width:0%;}
+.prog-phases{display:flex;gap:8px;}
+.prog-phase{flex:1;padding:9px 12px;border-radius:var(--r-sm);background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;transition:all 0.2s;}
+.pp-label{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:0.02em;}
+.pp-count{font-size:11px;font-weight:700;color:var(--text3);}
+.prog-phase.active .pp-label{color:var(--accent);}
+.prog-phase.active .pp-count{color:var(--accent);}
+.prog-phase.active{border-color:var(--accent-bd);background:var(--accent-bg);}
+.prog-phase.done .pp-label{color:var(--green);}
+.prog-phase.done .pp-count{color:var(--green);}
+.prog-phase.done{border-color:rgba(48,209,88,0.25);background:rgba(48,209,88,0.07);}
+/* mark done button (topbar) */
+.mark-done-btn{display:none;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;background:var(--bg3);border:1px solid var(--border);color:var(--text2);transition:all 0.15s;margin-left:8px;}
+.mark-done-btn:hover{border-color:rgba(48,209,88,0.4);color:var(--green);background:rgba(48,209,88,0.08);}
+.mark-done-btn.done{background:rgba(48,209,88,0.1);border-color:rgba(48,209,88,0.3);color:var(--green);}
+.mark-done-btn.show{display:inline-flex;align-items:center;gap:5px;}
+/* done chip */
+.mod-chip.mod-done{border-color:rgba(48,209,88,0.3);color:var(--green);background:rgba(48,209,88,0.07);}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     LOCK SCREEN
+════════════════════════════════ -->
+<div id="lock">
+  <button class="lock-theme-btn" onclick="toggleTheme()" id="lock-theme-btn">🌙</button>
+  <div class="lock-card">
+    <div class="lock-icon">
+      <!-- Visionnaires Pro V Logo -->
+      <svg viewBox="0 0 56 56" width="46" height="46" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="vg-lock" x1="25%" y1="0%" x2="75%" y2="100%">
+            <stop offset="0%" stop-color="#5DC8FF"/>
+            <stop offset="40%" stop-color="#0088FF"/>
+            <stop offset="100%" stop-color="#00D8FF"/>
+          </linearGradient>
+          <filter id="vglow-lock" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <polygon points="7,11 20,11 28,38 36,11 49,11 28,49" fill="url(#vg-lock)" filter="url(#vglow-lock)"/>
+      </svg>
+    </div>
+    <div class="lock-title">Visionnaires Pro</div>
+    <div class="lock-sub">Entre ton prénom et ton code d'accès pour débloquer ton Coach IA.</div>
+    <input class="lock-input" id="uname" type="text" placeholder="Ton prénom…"
+      onkeydown="if(event.key==='Enter')document.getElementById('pwd').focus()">
+    <input class="lock-input" id="pwd" type="password" placeholder="Code d'accès…"
+      onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="lock-btn" onclick="tryLogin()">Accéder à Visionnaires Pro</button>
+    <div class="lock-err" id="lock-err"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     APP
+════════════════════════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sb-head">
+      <div class="sb-brand-row">
+        <div class="sb-logo">
+          <!-- V Icon small -->
+          <svg viewBox="0 0 30 30" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="vg-sb" x1="25%" y1="0%" x2="75%" y2="100%">
+                <stop offset="0%" stop-color="#5DC8FF"/>
+                <stop offset="100%" stop-color="#00D8FF"/>
+              </linearGradient>
+            </defs>
+            <polygon points="3,6 10,6 15,22 20,6 27,6 15,26" fill="url(#vg-sb)"/>
+          </svg>
+        </div>
+        <div>
+          <div class="sb-name">Visionnaires Pro</div>
+          <div class="sb-sub">Coach IA · 90 Jours</div>
+        </div>
+        <div class="sb-actions">
+          <button class="sb-icon-btn" onclick="toggleTheme()" id="theme-btn" title="Dark/Light">🌙</button>
+        </div>
+      </div>
+      <button class="new-chat-btn" onclick="goHome()">
+        <span>✏️</span> Nouveau chat
+      </button>
+    </div>
+
+    <div class="sb-scroll">
+      <div class="sb-section">Accueil</div>
+      <button class="chat-item active" id="home-link" onclick="goHome()">
+        <span class="ci-icon">🏠</span>
+        <span class="ci-label">Accueil</span>
+      </button>
+      <div id="history-area"></div>
+    </div>
+
+    <div class="sb-foot">
+      <div class="sb-user-row">
+        <div class="sb-avatar" id="sb-avatar">V</div>
+        <div style="flex:1">
+          <div class="sb-uname" id="sb-uname">Visionnaire</div>
+          <button class="sb-logout" onclick="logout()">Se déconnecter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- Topbar -->
+    <div id="topbar">
+      <div>
+        <div class="tb-title" id="tb-title">Accueil</div>
+        <div class="tb-desc" id="tb-desc">Coach IA · Visionnaires Pro</div>
+      </div>
+      <div style="display:flex;align-items:center;">
+        <span class="phase-pill home" id="tb-pill">Coach IA</span>
+        <button class="mark-done-btn" id="mark-done-btn" onclick="toggleModDone()">○ Marquer terminé</button>
+      </div>
+    </div>
+
+    <!-- ── HOME PAGE ── -->
+    <div id="home">
+
+      <div class="home-hero">
+        <div class="home-greeting" id="home-greeting"></div>
+        <h1>Sur quoi veux-tu travailler aujourd'hui&nbsp;?</h1>
+        <p>Pose ta question : j'évalue ton niveau et te guide vers le module le plus adapté</p>
+
+        <!-- BIG CHAT INPUT -->
+        <div class="hero-chat-box">
+          <textarea class="hero-textarea" id="home-input"
+            placeholder="Ex : Je veux trouver ma niche, améliorer ma page de vente, analyser mes pubs…"
+            onkeydown="handleHomeKey(event)" oninput="autoResize(this)"></textarea>
+          <div class="hero-bottom">
+            <div class="hero-tools">
+              <button class="hero-tool" onclick="document.getElementById('home-img-file').click()">
+                📎 <span>Joindre une image</span>
+              </button>
+              <input type="file" id="home-img-file" accept="image/*" onchange="handleHomeImg(event)">
+              <div class="hero-img-chip" id="hero-img-chip">
+                🖼️ <span id="hero-img-name">image.jpg</span>
+                <button onclick="clearHomeImg()">✕</button>
+              </div>
+            </div>
+            <button class="hero-send" onclick="homeSubmit()">➤</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUGGESTIONS -->
+      <div class="home-below">
+
+        <!-- PROGRESS -->
+        <div class="prog-section" id="prog-section">
+          <div class="prog-header">
+            <span class="prog-label">Progression · 90 Jours</span>
+            <span class="prog-pct" id="prog-pct">0 / 17</span>
+          </div>
+          <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+          <div class="prog-phases">
+            <div class="prog-phase" id="pp0"><span class="pp-label">Phase 1 · Construis</span><span class="pp-count">0/7</span></div>
+            <div class="prog-phase" id="pp1"><span class="pp-label">Phase 2 · Vends</span><span class="pp-count">0/5</span></div>
+            <div class="prog-phase" id="pp2"><span class="pp-label">Phase 3 · Scale</span><span class="pp-count">0/5</span></div>
+          </div>
+        </div>
+
+        <div class="home-label">Commencer par ici</div>
+        <div class="sug-row">
+          <button class="sug-btn" onclick="startSug('niche','Je veux clarifier ou affiner ma niche')">
+            <span class="sb-icon">🎯</span>
+            <span class="sb-title">Trouver ma niche</span>
+            <span class="sb-desc">Identifie et valide ton marché cible avec précision.</span>
+          </button>
+          <button class="sug-btn" onclick="startSug('offre','Je veux construire ou améliorer mon offre')">
+            <span class="sb-icon">📦</span>
+            <span class="sb-title">Construire mon offre</span>
+            <span class="sb-desc">Définis ce que tu vends, à qui, et pourquoi ils achètent.</span>
+          </button>
+          <button class="sug-btn" onclick="startSug('pub','Je veux analyser mes publicités')">
+            <span class="sb-icon">📣</span>
+            <span class="sb-title">Analyser mes pubs</span>
+            <span class="sb-desc">Uploade ton Ads Manager et obtiens un plan d'action clair.</span>
+          </button>
+          <button class="sug-btn" onclick="startSug('contenu','Je veux créer du contenu pour mes réseaux')">
+            <span class="sb-icon">📱</span>
+            <span class="sb-title">Créer du contenu</span>
+            <span class="sb-desc">Posts, hooks, calendrier — pour attirer ton client idéal.</span>
+          </button>
+          <button class="sug-btn" onclick="startSug('landing','Je veux améliorer ma page de vente')">
+            <span class="sb-icon">🖥️</span>
+            <span class="sb-title">Ma page de vente</span>
+            <span class="sb-desc">Analyse et rédige chaque section pour maximiser les conversions.</span>
+          </button>
+          <button class="sug-btn" onclick="startSug('analyse','Je veux analyser mes résultats')">
+            <span class="sb-icon">📊</span>
+            <span class="sb-title">Analyser mes résultats</span>
+            <span class="sb-desc">Dashboard + recommandations prioritaires à partir de tes stats.</span>
+          </button>
+        </div>
+
+        <div class="home-label">Tous les modules</div>
+        <div class="chips-row" id="chips-row"></div>
+      </div>
+    </div>
+
+    <!-- ── CHAT PAGE ── -->
+    <div id="chat-pg">
+      <div id="chat-area"></div>
+      <div id="input-area">
+        <div class="qbtns" id="qbtns"></div>
+        <div class="img-chip" id="img-chip">
+          🖼️ <span id="img-name">image.jpg</span>
+          <button onclick="clearImg()">✕</button>
+        </div>
+        <div class="input-row">
+          <input type="file" id="img-file" accept="image/*" onchange="handleImg(event)">
+          <button class="ia-btn" onclick="document.getElementById('img-file').click()" title="Joindre une image">📎</button>
+          <textarea id="user-input" placeholder="Écris ta réponse, ou attache une image…" rows="1"
+            onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="ia-btn send" id="send-btn" onclick="sendMsg()">➤</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+'use strict';
+
+/* ─────────────────────────────────────
+   CONFIG — change password monthly
+───────────────────────────────────── */
+const PASSWORDS = ["VISION-AVRIL-2026","DEMO"];
+const API_KEY = 'YOUR_API_KEY_HERE'; // ← paste your sk-ant-... key here
+
+/* ─────────────────────────────────────
+   STATE
+───────────────────────────────────── */
+let isDark = true;
+let currentChatId = null;
+let pendingImg = null;
+let homeImgData = null;
+let isLoading = false;
+let userName = '';
+let doneMods = new Set();
+let chats = {};
+
+const ALL_MODS_ORDERED = ['niche','avatar','douleurs','offre','positionnement','tunnel','emails_setup','contenu','copywriting','campagne','objections','landing','analyse','automatisation','upsell','pub','systeme'];
+const PHASE_RANGES = [[0,7],[7,12],[12,17]];
+let folders = {"Phase 1 — Construis":[],"Phase 2 — Vends":[],"Phase 3 — Scale":[]};
+
+const phaseMap = {
+  niche:'Phase 1 — Construis',avatar:'Phase 1 — Construis',douleurs:'Phase 1 — Construis',
+  offre:'Phase 1 — Construis',positionnement:'Phase 1 — Construis',tunnel:'Phase 1 — Construis',emails_setup:'Phase 1 — Construis',
+  contenu:'Phase 2 — Vends',copywriting:'Phase 2 — Vends',campagne:'Phase 2 — Vends',objections:'Phase 2 — Vends',landing:'Phase 2 — Vends',
+  analyse:'Phase 3 — Scale',automatisation:'Phase 3 — Scale',upsell:'Phase 3 — Scale',pub:'Phase 3 — Scale',systeme:'Phase 3 — Scale'
+};
+
+function save(){try{localStorage.setItem('lvpro_c',JSON.stringify(chats));localStorage.setItem('lvpro_f',JSON.stringify(folders));localStorage.setItem('lvpro_n',userName);localStorage.setItem('lvpro_d',JSON.stringify([...doneMods]));}catch(e){}}
+function load(){try{const c=localStorage.getItem('lvpro_c');if(c)chats=JSON.parse(c);const f=localStorage.getItem('lvpro_f');if(f)folders=JSON.parse(f);const n=localStorage.getItem('lvpro_n');if(n)userName=n;const d=localStorage.getItem('lvpro_d');if(d)doneMods=new Set(JSON.parse(d));}catch(e){}}
+
+/* ─────────────────────────────────────
+   THEME
+───────────────────────────────────── */
+function toggleTheme(){
+  isDark=!isDark;
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  const icon=isDark?'🌙':'☀️';
+  document.getElementById('theme-btn').textContent=icon;
+  document.getElementById('lock-theme-btn').textContent=icon;
+}
+
+/* ─────────────────────────────────────
+   AUTH
+───────────────────────────────────── */
+function greeting(){
+  const h=new Date().getHours();
+  const name=userName?`, ${userName}`:'';
+  if(h>=5&&h<12)return`Bonjour${name} ☀️`;
+  if(h>=12&&h<18)return`Bon après-midi${name} 👋`;
+  if(h>=18&&h<22)return`Bonne soirée${name} 🌆`;
+  return`Bonsoir${name} 🌙`;
+}
+
+function applyUser(){
+  const initial=userName?userName[0].toUpperCase():'V';
+  document.getElementById('sb-avatar').textContent=initial;
+  document.getElementById('sb-uname').textContent=userName||'Visionnaire';
+  const g=document.getElementById('home-greeting');
+  if(g)g.textContent=greeting();
+}
+
+function tryLogin(){
+  const name=document.getElementById('uname').value.trim();
+  const v=document.getElementById('pwd').value.trim().toUpperCase();
+  const e=document.getElementById('lock-err');
+  if(!name){e.textContent="Entre ton prénom pour continuer.";setTimeout(()=>e.textContent='',2500);return;}
+  if(PASSWORDS.includes(v)){
+    userName=name.charAt(0).toUpperCase()+name.slice(1);
+    document.getElementById('lock').classList.add('gone');
+    document.getElementById('app').classList.add('show');
+    load();
+    userName=name.charAt(0).toUpperCase()+name.slice(1);
+    save(); applyUser(); renderSidebar(); goHome(); buildChips(); updateProgress();
+  } else {
+    e.textContent="Code incorrect. Vérifie le code envoyé ce mois-ci.";
+    document.getElementById('pwd').value='';
+    setTimeout(()=>e.textContent='',3000);
+  }
+}
+function logout(){
+  document.getElementById('lock').classList.remove('gone');
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('pwd').value='';
+  document.getElementById('uname').value='';
+  currentChatId=null;
+}
+
+/* ─────────────────────────────────────
+   SIDEBAR
+───────────────────────────────────── */
+function renderSidebar(){
+  const area=document.getElementById('history-area');
+  area.innerHTML='';
+  const foldered=new Set(Object.values(folders).flat());
+  const ungrouped=Object.values(chats).filter(c=>!foldered.has(c.id)).sort((a,b)=>b.ts-a.ts);
+
+  if(ungrouped.length>0){
+    const lbl=el('div','sb-section');lbl.textContent='Récents';area.appendChild(lbl);
+    ungrouped.slice(0,10).forEach(c=>area.appendChild(chatItem(c)));
+  }
+
+  Object.entries(folders).forEach(([fname,ids])=>{
+    const fc=ids.map(i=>chats[i]).filter(Boolean);
+    if(!fc.length)return;
+    const sec=el('div');
+    const hdr=el('button','folder-hdr open');
+    hdr.innerHTML=`<span>📁</span><span>${fname}</span><span class="folder-arrow">›</span>`;
+    const body=el('div','folder-body show');
+    hdr.onclick=()=>{hdr.classList.toggle('open');body.classList.toggle('show');};
+    fc.sort((a,b)=>b.ts-a.ts).forEach(c=>body.appendChild(chatItem(c)));
+    sec.appendChild(hdr);sec.appendChild(body);area.appendChild(sec);
+  });
+}
+
+function chatItem(chat){
+  const btn=el('button','chat-item'+(chat.id===currentChatId?' active':''));
+  btn.dataset.id=chat.id;
+  const icon=MODS[chat.module]?MODS[chat.module].title.split(' ')[0]:'💬';
+  btn.innerHTML=`<span class="ci-icon">${icon}</span><span class="ci-label">${chat.title}</span><span class="ci-del" onclick="delChat('${chat.id}',event)">✕</span>`;
+  btn.onclick=e=>{if(!e.target.classList.contains('ci-del'))openChat(chat.id);};
+  return btn;
+}
+
+function setActive(id){
+  document.querySelectorAll('.chat-item').forEach(el=>el.classList.remove('active'));
+  if(id==='home')document.getElementById('home-link').classList.add('active');
+  else{const el=document.querySelector(`.chat-item[data-id="${id}"]`);if(el)el.classList.add('active');}
+}
+
+function delChat(id,e){
+  e.stopPropagation();
+  delete chats[id];
+  Object.keys(folders).forEach(f=>{folders[f]=folders[f].filter(i=>i!==id);});
+  if(currentChatId===id)goHome();
+  save();renderSidebar();
+}
+
+/* ─────────────────────────────────────
+   HOME
+───────────────────────────────────── */
+function goHome(){
+  currentChatId=null;
+  document.getElementById('home').style.display='flex';
+  document.getElementById('home').style.flexDirection='column';
+  document.getElementById('home').style.alignItems='center';
+  document.getElementById('chat-pg').classList.remove('show');
+  document.getElementById('tb-title').textContent='Accueil';
+  document.getElementById('tb-desc').textContent='Coach IA · Visionnaires Pro';
+  document.getElementById('tb-pill').textContent='Coach IA';
+  document.getElementById('tb-pill').className='phase-pill home';
+  setActive('home');
+  applyUser();
+  updateProgress();
+  const btn=document.getElementById('mark-done-btn');
+  if(btn)btn.classList.remove('show');
+}
+
+function updateProgress(){
+  const total=ALL_MODS_ORDERED.length,done=doneMods.size;
+  const pct=Math.round(done/total*100);
+  const fill=document.getElementById('prog-fill');
+  const pctEl=document.getElementById('prog-pct');
+  if(fill)fill.style.width=pct+'%';
+  if(pctEl)pctEl.textContent=`${done} / ${total}`;
+  PHASE_RANGES.forEach(([pStart,pEnd],i)=>{
+    const bar=document.getElementById('pp'+i);if(!bar)return;
+    const phaseMods=ALL_MODS_ORDERED.slice(pStart,pEnd);
+    const phaseDone=phaseMods.filter(m=>doneMods.has(m)).length;
+    const phaseTotal=phaseMods.length;
+    bar.querySelector('.pp-count').textContent=`${phaseDone}/${phaseTotal}`;
+    bar.classList.toggle('done',phaseDone===phaseTotal);
+    bar.classList.toggle('active',phaseDone>0&&phaseDone<phaseTotal);
+  });
+}
+
+function updateMarkDoneBtn(modKey){
+  const btn=document.getElementById('mark-done-btn');if(!btn)return;
+  const done=doneMods.has(modKey);
+  btn.textContent=done?'✓ Module terminé':'○ Marquer terminé';
+  btn.classList.toggle('done',done);
+}
+
+function toggleModDone(){
+  const chat=chats[currentChatId];if(!chat)return;
+  const key=chat.module;
+  if(doneMods.has(key))doneMods.delete(key);else doneMods.add(key);
+  save();updateProgress();buildChips();updateMarkDoneBtn(key);
+}
+
+function buildChips(){
+  const row=document.getElementById('chips-row');row.innerHTML='';
+  Object.entries(MODS).forEach(([k,m])=>{
+    const done=doneMods.has(k);
+    const c=el('button','mod-chip'+(done?' mod-done':''));
+    c.textContent=m.title+(done?' ✓':'');
+    c.onclick=()=>startSug(k,`Je veux travailler sur : ${m.title}`);
+    row.appendChild(c);
+  });
+}
+
+function handleHomeKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();homeSubmit();}}
+
+function homeSubmit(){
+  const text=document.getElementById('home-input').value.trim();
+  if(!text&&!homeImgData)return;
+  const mod=detectMod(text)||'niche';
+  const img=homeImgData;
+  document.getElementById('home-input').value='';
+  homeImgData=null;
+  document.getElementById('hero-img-chip').classList.remove('show');
+  startNewChat(mod,text,img);
+}
+
+function startSug(mod,text){startNewChat(mod,text,null);}
+
+function handleHomeImg(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{homeImgData={base64:ev.target.result,name:f.name};document.getElementById('hero-img-name').textContent=f.name;document.getElementById('hero-img-chip').classList.add('show');};
+  r.readAsDataURL(f);e.target.value='';
+}
+function clearHomeImg(){homeImgData=null;document.getElementById('hero-img-chip').classList.remove('show');}
+
+function detectMod(t){
+  const s=t.toLowerCase();
+  if(/niche|marché|spéciali/.test(s))return'niche';
+  if(/avatar|client idéal|persona/.test(s))return'avatar';
+  if(/douleur|problème|frustration/.test(s))return'douleurs';
+  if(/offre|cours|coaching|service|produit/.test(s))return'offre';
+  if(/positionnement|différenci|usp/.test(s))return'positionnement';
+  if(/tunnel|funnel/.test(s))return'tunnel';
+  if(/email|séquence|newsletter/.test(s))return'emails_setup';
+  if(/contenu|instagram|tiktok|réseaux|post/.test(s))return'contenu';
+  if(/copy|message de vente|rédaction/.test(s))return'copywriting';
+  if(/campagne|lancement|premières ventes/.test(s))return'campagne';
+  if(/objection|doute/.test(s))return'objections';
+  if(/landing|page de vente/.test(s))return'landing';
+  if(/analys|données|stats|résultat|dashboard/.test(s))return'analyse';
+  if(/automatis|workflow|aquos/.test(s))return'automatisation';
+  if(/upsell|premium|high ticket/.test(s))return'upsell';
+  if(/pub|publicité|ads|facebook|meta/.test(s))return'pub';
+  if(/scale|croissance|système/.test(s))return'systeme';
+  return null;
+}
+
+/* ─────────────────────────────────────
+   CHAT
+───────────────────────────────────── */
+function startNewChat(modKey,text,imgData){
+  const id='c'+Date.now();
+  const title=(text||MODS[modKey].title).slice(0,42)+(text&&text.length>42?'…':'');
+  chats[id]={id,title,module:modKey,messages:[],ts:Date.now()};
+  const folder=phaseMap[modKey]||'Phase 1 — Construis';
+  if(!folders[folder])folders[folder]=[];
+  folders[folder].unshift(id);
+  save();renderSidebar();
+  openChat(id,{firstMsg:text,img:imgData});
+}
+
+function openChat(id,opts){
+  currentChatId=id;
+  const chat=chats[id];if(!chat)return;
+  const mod=MODS[chat.module];
+
+  document.getElementById('tb-title').textContent=mod.title;
+  document.getElementById('tb-desc').textContent=mod.desc;
+  document.getElementById('tb-pill').textContent=mod.badge;
+  document.getElementById('tb-pill').className='phase-pill '+mod.badgeClass;
+
+  document.getElementById('home').style.display='none';
+  document.getElementById('chat-pg').classList.add('show');
+  setActive(id);
+  const btn=document.getElementById('mark-done-btn');
+  if(btn){btn.classList.add('show');updateMarkDoneBtn(chat.module);}
+
+  const ca=document.getElementById('chat-area');ca.innerHTML='';
+  chat.messages.forEach(m=>{
+    if(m.role==='user'){
+      if(m.imgUrl)showImgBub(m.imgUrl,m.imgName||'image');
+      if(m.content&&m.content!=='[image]')appendBub('user',m.content);
+    } else if(m.role==='assistant'){appendBub('ai',m.content);}
+  });
+
+  updateQbtns(mod.quickReplies||[]);
+
+  if(opts){
+    const {firstMsg,img}=opts;
+    if(img){
+      showImgBub(img.base64,img.name);
+      chat.messages.push({role:'user',content:firstMsg||'[image]',imgBase64:img.base64,imgUrl:img.base64,imgName:img.name});
+    } else if(firstMsg){
+      chat.messages.push({role:'user',content:firstMsg});
+      appendBub('user',firstMsg);
+    }
+    save();callClaude(id);
+  } else if(chat.messages.length===0){
+    chat.messages.push({role:'user',content:'Bonjour, je suis prêt à commencer.'});
+    save();callClaude(id);
+  }
+}
+
+/* ─────────────────────────────────────
+   IMAGE (chat)
+───────────────────────────────────── */
+function handleImg(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{pendingImg={base64:ev.target.result,name:f.name};document.getElementById('img-name').textContent=f.name;document.getElementById('img-chip').classList.add('show');};
+  r.readAsDataURL(f);e.target.value='';
+}
+function clearImg(){pendingImg=null;document.getElementById('img-chip').classList.remove('show');}
+
+function showImgBub(src,lbl){
+  const ca=document.getElementById('chat-area');
+  const w=el('div','msg user');
+  const av=el('div','av user');av.textContent='👤';
+  const ib=el('div','img-bub');ib.innerHTML=`<img src="${src}" alt="image"><div class="img-lbl">📎 ${lbl}</div>`;
+  w.appendChild(av);w.appendChild(ib);ca.appendChild(w);ca.scrollTop=ca.scrollHeight;
+}
+
+/* ─────────────────────────────────────
+   SEND
+───────────────────────────────────── */
+async function sendMsg(){
+  if(!currentChatId||isLoading)return;
+  const inp=document.getElementById('user-input');
+  const text=inp.value.trim();
+  if(!text&&!pendingImg)return;
+  inp.value='';inp.style.height='auto';
+  document.getElementById('qbtns').innerHTML='';
+
+  const chat=chats[currentChatId];
+  if(pendingImg){
+    showImgBub(pendingImg.base64,pendingImg.name);
+    chat.messages.push({role:'user',content:text||'[image]',imgBase64:pendingImg.base64,imgUrl:pendingImg.base64,imgName:pendingImg.name});
+    clearImg();
+  } else {
+    chat.messages.push({role:'user',content:text});
+    appendBub('user',text);
+  }
+  save();await callClaude(currentChatId);
+}
+
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,180)+'px';}
+
+/* ─────────────────────────────────────
+   CLAUDE API
+───────────────────────────────────── */
+async function callClaude(chatId){
+  if(isLoading)return;
+  isLoading=true;
+  document.getElementById('send-btn').disabled=true;
+  showTyping();
+
+  const chat=chats[chatId];
+  const mod=MODS[chat.module];
+  const msgs=chat.messages.filter(m=>m.role==='user'||m.role==='assistant').map(m=>{
+    if(m.role==='user'&&m.imgBase64){
+      const match=m.imgBase64.match(/^data:(image\/\w+);base64,(.+)$/);
+      const parts=[];
+      if(match)parts.push({type:'image',source:{type:'base64',media_type:match[1],data:match[2]}});
+      parts.push({type:'text',text:m.content!=='[image]'?m.content:"Voici l'image à analyser."});
+      return{role:'user',content:parts};
+    }
+    return{role:m.role,content:m.content};
+  });
+
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "x-api-key":API_KEY,
+        "anthropic-version":"2023-06-01",
+        "anthropic-dangerous-direct-browser-access":"true"
+      },
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,system:mod.systemPrompt,messages:msgs})
+    });
+    const data=await res.json();
+    if(!res.ok){
+      throw new Error(data.error?.message || 'API error');
+    }
+    const reply=data.content?.[0]?.text||"Désolé, une erreur s'est produite.";
+    removeTyping();
+    chat.messages.push({role:'assistant',content:reply});
+    save();appendBub('ai',reply);
+  }catch(e){removeTyping();appendBub('ai',"⚠️ Erreur de connexion. Réessaie.");}
+
+  isLoading=false;
+  document.getElementById('send-btn').disabled=false;
+  document.getElementById('qbtns').innerHTML='';
+}
+
+/* ─────────────────────────────────────
+   UI HELPERS
+───────────────────────────────────── */
+function el(tag,cls=''){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
+
+function appendBub(role,content){
+  const ca=document.getElementById('chat-area');
+  const wrap=el('div','msg '+role);
+  const av=el('div','av '+role);av.textContent=role==='ai'?'VP':'👤';
+  const bub=el('div','bub');
+
+  const dashMatch=content.match(/```dashboard[\s\S]*?```/);
+  const txt=content.replace(/```dashboard[\s\S]*?```/g,'').trim();
+  if(txt)bub.innerHTML=fmt(txt);
+
+  wrap.appendChild(av);wrap.appendChild(bub);ca.appendChild(wrap);
+
+  if(dashMatch){
+    const dc=el('div');dc.style.paddingLeft='38px';ca.appendChild(dc);
+    renderDash(content,dc);
+  }
+  ca.scrollTop=ca.scrollHeight;
+}
+
+function fmt(t){
+  return t
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g,'<em>$1</em>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>[\s\S]*?<\/li>)/g,'<ul>$1</ul>')
+    .replace(/\n\n/g,'</p><p style="margin-top:9px;">')
+    .replace(/\n/g,'<br>');
+}
+
+function showTyping(){
+  const ca=document.getElementById('chat-area');
+  const w=el('div','msg ai');w.id='typing';
+  const av=el('div','av ai');av.textContent='VP';
+  const b=el('div','bub');b.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  w.appendChild(av);w.appendChild(b);ca.appendChild(w);ca.scrollTop=ca.scrollHeight;
+}
+function removeTyping(){const t=document.getElementById('typing');if(t)t.remove();}
+
+function updateQbtns(replies){
+  const c=document.getElementById('qbtns');c.innerHTML='';
+  (replies||[]).forEach(r=>{
+    const b=el('button','qbtn');b.textContent=r;
+    b.onclick=()=>{document.getElementById('user-input').value=r;sendMsg();};
+    c.appendChild(b);
+  });
+}
+
+function renderDash(text,container){
+  const m=text.match(/```dashboard\s*([\s\S]*?)```/);if(!m)return;
+  try{
+    const d=JSON.parse(m[1]);
+    const wrap=el('div','dash-wrap');
+    if(d.kpis?.length){
+      const g=el('div','kpi-grid');
+      d.kpis.forEach(k=>{
+        const c=el('div','kpi-card');
+        const tc=k.trend>0?'up':k.trend<0?'down':'flat';
+        const tt=k.trend>0?`▲ ${k.trend}%`:k.trend<0?`▼ ${Math.abs(k.trend)}%`:'→ stable';
+        c.innerHTML=`<div class="kpi-val">${k.value}</div><div class="kpi-lbl">${k.label}</div><div class="kpi-trend ${tc}">${tt}</div>`;
+        g.appendChild(c);
+      });
+      wrap.appendChild(g);
+    }
+    if(d.bars?.length){
+      const ch=el('div','bar-chart');
+      ch.innerHTML=`<div class="bar-ttl">${d.chartTitle||'Analyse'}</div>`;
+      const mx=Math.max(...d.bars.map(b=>b.value));
+      d.bars.forEach(b=>{
+        const p=Math.round(b.value/mx*100);
+        const row=el('div','bar-row');
+        row.innerHTML=`<div class="bar-lbl">${b.label}</div><div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${b.color||'var(--accent)'}"></div></div><div class="bar-val">${b.display||b.value}</div>`;
+        ch.appendChild(row);
+      });
+      wrap.appendChild(ch);
+    }
+    if(d.recommendations?.length){
+      const rc=el('div','reco-box');
+      rc.innerHTML='<div class="reco-ttl">🎯 Recommandations</div>';
+      d.recommendations.forEach((r,i)=>{
+        const item=el('div','reco-item');
+        item.innerHTML=`<div class="reco-n">${i+1}</div><div>${r}</div>`;
+        rc.appendChild(item);
+      });
+      wrap.appendChild(rc);
+    }
+    container.appendChild(wrap);
+  }catch(e){}
+}
+
+/* ─────────────────────────────────────
+   MODULES
+───────────────────────────────────── */
+const MODS={
+  niche:{title:"🎯 Trouver ta niche",desc:"Phase 1 · Fondations du business",badge:"Phase 1 — Construis",badgeClass:"p1",
+    quickReplies:["Je débute complètement","J'ai déjà une idée","Je fais du e-commerce"],
+    systemPrompt:`Tu es le Coach IA du programme "Challenge : Lance ton Business Digital en 90 Jours" de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Tu es direct, bienveillant et motivant. Pose UNE question à la fois.
+ANALYSE D'IMAGES : Si une image est partagée, analyse-la dans le contexte de la niche.
+RÔLE : Aider à trouver et valider une niche de business digital précise et rentable.
+ÉTAPES : Compétences/passions → problèmes résolus → marchés porteurs → potentiel → niche précise → déclaration.
+RÉSULTAT : "Déclaration de niche" formatée.
+Si assez de données, génère un dashboard :
+\`\`\`dashboard
+{"kpis":[{"label":"Potentiel marché","value":"★★★★☆","trend":0},{"label":"Compétition","value":"Modérée","trend":0}],"chartTitle":"Forces de ta niche","bars":[{"label":"Passion","value":80,"display":"80%"},{"label":"Expertise","value":70,"display":"70%"},{"label":"Marché","value":90,"display":"90%"},{"label":"Monétisation","value":85,"display":"85%"}],"recommendations":["Spécialise-toi sur un segment ultra-précis","Valide avec 10 conversations avant de créer","Positionne-toi contre une frustration commune"]}
+\`\`\`
+Commence par une question chaleureuse.`},
+
+  avatar:{title:"👤 Client idéal",desc:"Phase 1 · Avatar client précis",badge:"Phase 1 — Construis",badgeClass:"p1",
+    quickReplies:["J'ai déjà des clients","Pas encore de clients","Je cible les entrepreneurs"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si screenshot de profil/commentaires, extrais les insights.
+RÔLE : Construire un avatar client ultra-précis.
+ÉTAPES : Niche → démographie → quotidien → frustrations → désirs → canaux → vocabulaire → essais passés.
+RÉSULTAT : Fiche avatar complète avec prénom fictif, citation, top 3 frustrations/désirs, objections.`},
+
+  douleurs:{title:"💡 Douleurs clients",desc:"Phase 1 · Ce qui fait vraiment souffrir",badge:"Phase 1 — Construis",badgeClass:"p1",
+    quickReplies:["Je connais les problèmes","Veux aller plus en profondeur","Aide-moi à trouver"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si image de commentaires/avis, extrais les douleurs.
+MODÈLE 3 NIVEAUX : Surface → Intermédiaire → Profond (identité).
+RÉSULTAT : Carte des douleurs avec douleur principale + 5-7 secondaires.`},
+
+  offre:{title:"📦 Construire ton offre",desc:"Phase 1 · Une offre irrésistible",badge:"Phase 1 — Construis",badgeClass:"p1",
+    quickReplies:["Cours en ligne","Coaching 1-1","Service fait-pour-vous"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si image d'offre actuelle ou concurrente, analyse et propose améliorations.
+FRAMEWORK : [Résultat spécifique] + [délai réaliste] + [pour qui] + sans [obstacle principal].
+RÉSULTAT : Fiche offre complète avec nom, promesse, contenu, prix, stack de valeur.`},
+
+  positionnement:{title:"🏆 Positionnement unique",desc:"Phase 1 · Ce qui te différencie",badge:"Phase 1 — Construis",badgeClass:"p1",
+    quickReplies:["Je ne sais pas en quoi je suis différent","J'ai une histoire forte","Ma méthode est unique"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si image de profil/bio/page concurrente, analyse et propose améliorations.
+FRAMEWORKS : Story / Method / Niche / Anti-guru.
+RÉSULTAT : Déclaration de positionnement + pitch 30 secondes.`},
+
+  tunnel:{title:"🔧 Tunnel de vente",desc:"Phase 1 · Le système qui convertit",badge:"Phase 1 — Construis",badgeClass:"p1",
+    quickReplies:["Je pars de zéro","J'ai déjà une page","Comment ça marche ?"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si screenshot de page de vente ou tunnel, analyse design, copy, structure et recommande des améliorations précises.
+STRUCTURE : Opt-in → Confirmation → Page de vente → Paiement → Remerciement → Séquence email.
+RÉSULTAT : Plan de tunnel validé + titre et accroche de la page de vente.`},
+
+  emails_setup:{title:"📧 Séquence email",desc:"Phase 1 · 5 emails qui convertissent",badge:"Phase 1 — Construis",badgeClass:"p1",
+    quickReplies:["Jamais fait d'email marketing","J'ai une liste","Écris les emails pour moi"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si image d'email ou séquence, analyse objet, accroche, structure, CTA.
+STRUCTURE : E1 (livraison+intro) → E2 (histoire) → E3 (problème) → E4 (solution) → E5 (offre).
+RÈGLES : Phrases courtes, un seul CTA, toujours un P.S.`},
+
+  contenu:{title:"📱 Contenu réseaux sociaux",desc:"Phase 2 · Contenu qui attire et convertit",badge:"Phase 2 — Vends",badgeClass:"p2",
+    quickReplies:["Instagram est ma priorité","Je veux TikTok","YouTube/LinkedIn"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si screenshot de profil ou post, analyse bio, cohérence visuelle, accroche, engagement potentiel.
+TYPES QUI CONVERTISSENT : Erreurs+leçons / Tips / Avant-après / Coulisses / Opinion contrariante.
+RÉSULTAT : Calendrier + 5 hooks + 3 posts complets.`},
+
+  copywriting:{title:"✍️ Copywriting",desc:"Phase 2 · Les mots qui font acheter",badge:"Phase 2 — Vends",badgeClass:"p2",
+    quickReplies:["J'ai du mal à convaincre","Apprendre les bases","Écris pour moi"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si screenshot de texte de vente, analyse selon AIDA/PAS/FAB et propose une version améliorée.
+FRAMEWORKS : AIDA / PAS / FAB / Before-After-Bridge.
+RÈGLES D'OR : Bénéfices > features, spécificité vend mieux, un seul CTA, "pourquoi maintenant" indispensable.`},
+
+  campagne:{title:"🚀 Lancer ta 1ère campagne",desc:"Phase 2 · Plan pour tes premières ventes",badge:"Phase 2 — Vends",badgeClass:"p2",
+    quickReplies:["Sans budget pub","Avec un petit budget","J'ai déjà une audience"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+RÉSULTAT : Plan de lancement jour par jour sur 14 jours avec objectif chiffré.`},
+
+  objections:{title:"🛡️ Gérer les objections",desc:"Phase 2 · Répondre aux doutes",badge:"Phase 2 — Vends",badgeClass:"p2",
+    quickReplies:["C'est trop cher","Je n'ai pas le temps","Je dois y réfléchir"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si screenshot de conversation de vente, analyse les objections et propose des réponses.
+5 OBJECTIONS : Argent / Temps / Confiance en soi / Confiance en toi / Urgence.
+MÉTHODE : Valider → questionner → reformuler en bénéfice → répondre + preuve sociale.`},
+
+  landing:{title:"🖥️ Page de vente",desc:"Phase 2 · Chaque section optimisée",badge:"Phase 2 — Vends",badgeClass:"p2",
+    quickReplies:["Je pars de zéro","J'ai un brouillon","Section par section"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si screenshot de page de vente, analyse section par section, score /10 par section et recommandations.
+STRUCTURE : Headline → Sous-titre → Problème → Erreur commune → Solution → Inclus → Témoignages → Qui es-tu → Garantie → Prix/CTA → FAQ → CTA final.`},
+
+  analyse:{title:"📊 Analyser ce qui marche",desc:"Phase 3 · Décisions basées sur les données",badge:"Phase 3 — Scale",badgeClass:"p3",
+    quickReplies:["J'ai eu mes premières ventes","Mon taux de conversion est bas","Génère mon dashboard"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français.
+ANALYSE D'IMAGES — PRIORITÉ : Si screenshot d'Ads Manager, Analytics, Aquos ou stats email, analyse TOUTES les métriques visibles.
+MÉTRIQUES : Trafic / Opt-in (30-50%) / Conversion (1-3%) / Ouverture email (25-40%) / Clics (2-5%) / CPL / CPA / ROAS.
+Génère TOUJOURS un dashboard quand tu as des données :
+\`\`\`dashboard
+{"kpis":[{"label":"Taux conversion","value":"2.3%","trend":15},{"label":"Ouverture email","value":"31%","trend":-5},{"label":"CPL","value":"4.20$","trend":-12},{"label":"ROAS","value":"3.2x","trend":8}],"chartTitle":"Performance par canal","bars":[{"label":"Email","value":85,"display":"85%","color":"#0088FF"},{"label":"Instagram","value":62,"display":"62%","color":"#FF9F0A"},{"label":"Organique","value":45,"display":"45%","color":"#30D158"}],"recommendations":["Améliore le headline de ta page de vente","Teste un nouvel objet email — taux en baisse","Scale Instagram — meilleur ROAS"]}
+\`\`\``},
+
+  automatisation:{title:"⚙️ Automatiser ton business",desc:"Phase 3 · Système qui tourne sans toi",badge:"Phase 3 — Scale",badgeClass:"p3",
+    quickReplies:["Automatiser les emails","Tunnel evergreen","Je commence"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ANALYSE D'IMAGES : Si screenshot d'un workflow Aquos ou Make, analyse le flux et propose améliorations.
+PRIORITÉS : Nurturing → Tunnel evergreen → Panier abandonné → Onboarding → Rappels → Upsell.`},
+
+  upsell:{title:"💰 Upsell & offre premium",desc:"Phase 3 · Augmente la valeur par client",badge:"Phase 3 — Scale",badgeClass:"p3",
+    quickReplies:["Coaching high ticket","Upsell simple","Offre récurrente"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Une question à la fois.
+ÉCHELLE : Low ticket → Mid ticket → High ticket → Récurrent.
+RÉSULTAT : Nouvelle offre définie + pitch 3 lignes + déclencheur.`},
+
+  pub:{title:"📣 Publicité payante",desc:"Phase 3 · Scale avec les Meta Ads",badge:"Phase 3 — Scale",badgeClass:"p3",
+    quickReplies:["Je débute avec les pubs","J'ai déjà lancé des pubs","Analyse mon Ads Manager"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français.
+ANALYSE D'IMAGES — PRIORITÉ ABSOLUE : Si screenshot d'Ads Manager Facebook/Instagram, analyse CPM, CPC, CTR, CPL, CPA, ROAS par campagne. Identifie gagnantes/perdantes. Recommande quoi couper, scaler, tester.
+STRUCTURE : TOF → MOF → BOF.
+RÈGLE D'OR : Prouver organiquement d'abord, scaler avec la pub ensuite.`},
+
+  systeme:{title:"♾️ Croissance durable",desc:"Phase 3 · Business qui génère en dormant",badge:"Phase 3 — Scale",badgeClass:"p3",
+    quickReplies:["Sortir des opérations","Passer à 6 chiffres","Bilan 90 jours"],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français.
+CHECKLIST JOUR 90 : Tunnel evergreen ✅ / Séquence email ✅ / Contenu régulier ✅ / Métriques suivies ✅ / Offre validée ✅ / Plan 90 jours ✅.
+Commence par un bilan chaleureux de ce qu'ils ont accompli.`}
+};
+
+buildChips();
+</script>
+</body>
+</html>
