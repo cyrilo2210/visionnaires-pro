@@ -311,6 +311,9 @@ input,textarea{font-family:inherit;}
 .qbtns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
 .qbtn{padding:5px 12px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:12px;font-weight:500;transition:all 0.13s;}
 .qbtn:hover{border-color:var(--accent);color:var(--accent);}
+.choices-row{display:flex;flex-direction:column;gap:7px;padding:8px 0 8px 38px;max-width:520px;}
+.choice-btn{text-align:left;padding:9px 14px;border-radius:10px;background:var(--bg2);border:1px solid var(--border2);color:var(--text);font-size:13px;font-weight:500;transition:all 0.13s;cursor:pointer;line-height:1.4;}
+.choice-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);}
 .img-chip{display:none;align-items:center;gap:7px;background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:8px;padding:5px 10px;font-size:12px;color:var(--accent);margin-bottom:7px;}
 .img-chip.show{display:flex;}
 .img-chip button{color:var(--text3);font-size:13px;transition:color 0.12s;}
@@ -981,7 +984,8 @@ function appendBub(role,content){
   const bub=el('div','bub');
 
   const dashMatch=content.match(/```dashboard[\s\S]*?```/);
-  const txt=content.replace(/```dashboard[\s\S]*?```/g,'').trim();
+  const choicesMatch=content.match(/```choices\n([\s\S]*?)```/);
+  let txt=content.replace(/```dashboard[\s\S]*?```/g,'').replace(/```choices[\s\S]*?```/g,'').trim();
   if(txt)bub.innerHTML=fmt(txt);
 
   wrap.appendChild(av);wrap.appendChild(bub);ca.appendChild(wrap);
@@ -989,6 +993,16 @@ function appendBub(role,content){
   if(dashMatch){
     const dc=el('div');dc.style.paddingLeft='38px';ca.appendChild(dc);
     renderDash(content,dc);
+  }
+  if(choicesMatch&&role==='ai'){
+    const options=choicesMatch[1].split('\n').map(s=>s.replace(/^[-•]\s*/,'').trim()).filter(Boolean);
+    const row=el('div','choices-row');
+    options.forEach(opt=>{
+      const b=el('button','choice-btn');b.textContent=opt;
+      b.onclick=()=>{document.getElementById('user-input').value=opt;sendMsg();};
+      row.appendChild(b);
+    });
+    ca.appendChild(row);
   }
   ca.scrollTop=ca.scrollHeight;
 }
@@ -1068,17 +1082,42 @@ function renderDash(text,container){
 ───────────────────────────────────── */
 const MODS={
   niche:{title:"🎯 Trouver ta niche",desc:"Phase 1 · Fondations du business",badge:"Phase 1 — Construis",badgeClass:"p1",
-    quickReplies:["Je débute complètement","J'ai déjà une idée","Je fais du e-commerce"],
-    systemPrompt:`Tu es le Coach IA du programme "Challenge : Lance ton Business Digital en 90 Jours" de Visionnaires Pro (Cyril Ortega). Tu parles UNIQUEMENT en français. Tu es direct, bienveillant et motivant. Pose UNE question à la fois.
-ANALYSE D'IMAGES : Si une image est partagée, analyse-la dans le contexte de la niche.
-RÔLE : Aider à trouver et valider une niche de business digital précise et rentable.
-ÉTAPES : Compétences/passions → problèmes résolus → marchés porteurs → potentiel → niche précise → déclaration.
-RÉSULTAT : "Déclaration de niche" formatée.
-Si assez de données, génère un dashboard :
-\`\`\`dashboard
-{"kpis":[{"label":"Potentiel marché","value":"★★★★☆","trend":0},{"label":"Compétition","value":"Modérée","trend":0}],"chartTitle":"Forces de ta niche","bars":[{"label":"Passion","value":80,"display":"80%"},{"label":"Expertise","value":70,"display":"70%"},{"label":"Marché","value":90,"display":"90%"},{"label":"Monétisation","value":85,"display":"85%"}],"recommendations":["Spécialise-toi sur un segment ultra-précis","Valide avec 10 conversations avant de créer","Positionne-toi contre une frustration commune"]}
+    quickReplies:[],
+    systemPrompt:`Tu es le Coach IA de Visionnaires Pro. Tu parles UNIQUEMENT en français. Tu es direct, honnête et efficace — tu coaches, tu ne flattes pas. Si quelqu'un fait fausse route, dis-le clairement mais avec bienveillance.
+
+MISSION : Identifier la niche digitale la plus rentable pour ce client en partant de ses forces réelles. Objectif concret : l'aider à gagner ses premiers 1 000 € en 1 à 2 semaines via un produit ou service digital (pas de e-commerce physique, pas de dropshipping).
+
+RÈGLES :
+- Une question à la fois. Attends la réponse.
+- Réponses courtes et directes. Pas de blabla.
+- Après chaque message, propose 3 à 5 options cliquables avec le format choices (voir ci-dessous).
+- Si la réponse est floue ou peu rentable, challenge : "Intéressant — mais est-ce que des gens paient déjà pour ça ?"
+- Si tu détectes une vraie opportunité, dis-le et explique pourquoi.
+
+FORMAT CHOICES — utilise TOUJOURS ce bloc après chaque question :
+\`\`\`choices
+- [option 1]
+- [option 2]
+- [option 3]
 \`\`\`
-Commence par une question chaleureuse.`},
+
+SÉQUENCE (adapte selon les réponses) :
+1. Tu as déjà une idée de niche, ou tu pars de zéro ?
+2. Quelles sont tes 2-3 compétences ou expériences les plus solides ?
+3. Tu as déjà aidé quelqu'un avec ça — même gratuitement ?
+4. Tu veux aider qui : entrepreneurs, salariés, parents, créateurs, étudiants… ?
+5. Quel est le problème le plus douloureux que tu pourrais résoudre pour eux ?
+6. Tu préfères vendre un service (fait-pour-vous), du coaching, ou un produit digital (formation, template…) ?
+
+SPRINT 1 000 € : Dès que la niche est claire, propose un plan immédiat :
+- Quelle offre simple lancer (service rapide, mini-session stratégie…)
+- À quel prix
+- Comment trouver 2 à 5 premiers clients cette semaine
+
+FORMAT DASHBOARD : Génère quand la niche est validée :
+\`\`\`dashboard
+{"kpis":[{"label":"Potentiel revenu rapide","value":"★★★★☆","trend":0},{"label":"Compétition","value":"Modérée","trend":0}],"chartTitle":"Forces de ta niche","bars":[{"label":"Expertise","value":80,"display":"80%"},{"label":"Demande marché","value":75,"display":"75%"},{"label":"Monétisation rapide","value":90,"display":"90%"},{"label":"Différenciation","value":70,"display":"70%"}],"recommendations":["Commence avec un service avant de créer une formation","Valide avec 3 clients payants avant de scaler","Vise 1 000 € en 14 jours max"]}
+\`\`\``},
 
   avatar:{title:"👤 Client idéal",desc:"Phase 1 · Avatar client précis",badge:"Phase 1 — Construis",badgeClass:"p1",
     quickReplies:["J'ai déjà des clients","Pas encore de clients","Je cible les entrepreneurs"],
