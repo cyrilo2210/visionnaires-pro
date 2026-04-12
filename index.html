@@ -134,6 +134,10 @@ input,textarea{font-family:inherit;}
 .ci-del{display:none;font-size:11px;color:var(--text3);padding:1px 3px;border-radius:3px;flex-shrink:0;transition:color 0.12s;}
 .chat-item:hover .ci-del{display:block;}
 .ci-del:hover{color:var(--red);}
+.ci-fav{display:none;font-size:12px;padding:1px 3px;flex-shrink:0;opacity:0.5;transition:opacity 0.12s;}
+.ci-fav.active{display:block;opacity:1;}
+.chat-item:hover .ci-fav{display:block;}
+.ci-fav:hover{opacity:1;}
 .folder-hdr{width:100%;display:flex;align-items:center;gap:6px;padding:5px 6px;border-radius:var(--r-sm);cursor:pointer;color:var(--text2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;transition:background 0.12s;}
 .folder-hdr:hover{background:var(--bg3);}
 .folder-arrow{margin-left:auto;font-size:9px;transition:transform 0.18s;}
@@ -613,6 +617,7 @@ let doneMods = new Set();
 let chats = {};
 let userCurrency = '€';
 let userMoneyGoal = '1 000 €';
+let favorites = new Set();
 
 /* ─────────────────────────────────────
    GEO / CURRENCY DETECTION
@@ -657,8 +662,8 @@ const phaseMap = {
   analyse:'Phase 3 — Scale',automatisation:'Phase 3 — Scale',upsell:'Phase 3 — Scale',pub:'Phase 3 — Scale',systeme:'Phase 3 — Scale'
 };
 
-function save(){try{localStorage.setItem('lvpro_c',JSON.stringify(chats));localStorage.setItem('lvpro_f',JSON.stringify(folders));localStorage.setItem('lvpro_n',userName);localStorage.setItem('lvpro_d',JSON.stringify([...doneMods]));}catch(e){}}
-function load(){try{const c=localStorage.getItem('lvpro_c');if(c)chats=JSON.parse(c);const f=localStorage.getItem('lvpro_f');if(f)folders=JSON.parse(f);const n=localStorage.getItem('lvpro_n');if(n)userName=n;const d=localStorage.getItem('lvpro_d');if(d)doneMods=new Set(JSON.parse(d));}catch(e){}}
+function save(){try{localStorage.setItem('lvpro_c',JSON.stringify(chats));localStorage.setItem('lvpro_f',JSON.stringify(folders));localStorage.setItem('lvpro_n',userName);localStorage.setItem('lvpro_d',JSON.stringify([...doneMods]));localStorage.setItem('lvpro_fav',JSON.stringify([...favorites]));}catch(e){}}
+function load(){try{const c=localStorage.getItem('lvpro_c');if(c)chats=JSON.parse(c);const f=localStorage.getItem('lvpro_f');if(f)folders=JSON.parse(f);const n=localStorage.getItem('lvpro_n');if(n)userName=n;const d=localStorage.getItem('lvpro_d');if(d)doneMods=new Set(JSON.parse(d));const fav=localStorage.getItem('lvpro_fav');if(fav)favorites=new Set(JSON.parse(fav));}catch(e){}}
 
 function applyCountryPick(){
   const val=document.getElementById('user-country').value;
@@ -733,6 +738,14 @@ function logout(){
 function renderSidebar(){
   const area=document.getElementById('history-area');
   area.innerHTML='';
+
+  // Favorites section
+  const favChats=Object.values(chats).filter(c=>favorites.has(c.id)).sort((a,b)=>b.ts-a.ts);
+  if(favChats.length>0){
+    const lbl=el('div','sb-section');lbl.textContent='⭐ Favoris';area.appendChild(lbl);
+    favChats.forEach(c=>area.appendChild(chatItem(c)));
+  }
+
   const foldered=new Set(Object.values(folders).flat());
   const ungrouped=Object.values(chats).filter(c=>!foldered.has(c.id)).sort((a,b)=>b.ts-a.ts);
 
@@ -758,9 +771,16 @@ function chatItem(chat){
   const btn=el('button','chat-item'+(chat.id===currentChatId?' active':''));
   btn.dataset.id=chat.id;
   const icon=MODS[chat.module]?MODS[chat.module].title.split(' ')[0]:'💬';
-  btn.innerHTML=`<span class="ci-icon">${icon}</span><span class="ci-label">${chat.title}</span><span class="ci-del" onclick="delChat('${chat.id}',event)">✕</span>`;
-  btn.onclick=e=>{if(!e.target.classList.contains('ci-del'))openChat(chat.id);};
+  const isFav=favorites.has(chat.id);
+  btn.innerHTML=`<span class="ci-icon">${icon}</span><span class="ci-label">${chat.title}</span><span class="ci-fav${isFav?' active':''}" onclick="toggleFavorite('${chat.id}',event)">${isFav?'⭐':'☆'}</span><span class="ci-del" onclick="delChat('${chat.id}',event)">✕</span>`;
+  btn.onclick=e=>{if(!e.target.classList.contains('ci-del')&&!e.target.classList.contains('ci-fav'))openChat(chat.id);};
   return btn;
+}
+
+function toggleFavorite(id,e){
+  e.stopPropagation();
+  if(favorites.has(id))favorites.delete(id);else favorites.add(id);
+  save();renderSidebar();
 }
 
 function setActive(id){
@@ -1024,7 +1044,14 @@ async function callClaude(chatId){
     const reply=data.content?.[0]?.text||"Désolé, une erreur s'est produite.";
     removeTyping();
     chat.messages.push({role:'assistant',content:reply});
-    save();appendBub('ai',reply);
+    // Auto-rename: after 2nd user message, use their first real answer as title
+    if(chat.messages.filter(m=>m.role==='user').length===2){
+      const firstUserAnswer=chat.messages.filter(m=>m.role==='user')[1]?.content||'';
+      if(firstUserAnswer&&firstUserAnswer!=='[image]'){
+        chat.title=firstUserAnswer.replace(/[—–]/g,'-').slice(0,40)+(firstUserAnswer.length>40?'…':'');
+      }
+    }
+    save();appendBub('ai',reply);renderSidebar();
   }catch(e){removeTyping();appendBub('ai',"⚠️ Erreur de connexion. Réessaie.");}
 
   isLoading=false;
@@ -1069,6 +1096,7 @@ function appendBub(role,content){
 
 function fmt(t){
   return t
+    .replace(/\u2014/g,'-').replace(/\u2013/g,'-').replace(/ — /g,' - ').replace(/—/g,'-')
     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
     .replace(/\*(.*?)\*/g,'<em>$1</em>')
     .replace(/^- (.+)$/gm,'<li>$1</li>')
