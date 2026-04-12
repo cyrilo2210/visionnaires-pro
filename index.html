@@ -724,7 +724,6 @@ function goHome(){
   document.getElementById('home').style.alignItems='center';
   document.getElementById('chat-pg').classList.remove('show');
   document.getElementById('tb-title').textContent='Accueil';
-  document.getElementById('tb-desc').textContent='Coach IA · Visionnaires Pro';
   document.getElementById('tb-pill').textContent='Coach IA';
   document.getElementById('tb-pill').className='phase-pill home';
   setActive('home');
@@ -842,7 +841,6 @@ function openChat(id,opts){
   const mod=MODS[chat.module];
 
   document.getElementById('tb-title').textContent=mod.title;
-  document.getElementById('tb-desc').textContent=mod.desc;
   document.getElementById('tb-pill').textContent=mod.badge;
   document.getElementById('tb-pill').className='phase-pill '+mod.badgeClass;
 
