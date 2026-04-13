@@ -158,8 +158,8 @@ input,textarea{font-family:inherit;}
 .sb-logout:hover{color:var(--red);}
 
 /* export modal */
-#export-modal,#deliverable-modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:1200;padding:24px;}
-#export-modal.show,#deliverable-modal.show{display:flex;}
+#export-modal,#deliverable-modal,#onboarding-modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:1200;padding:24px;}
+#export-modal.show,#deliverable-modal.show,#onboarding-modal.show{display:flex;}
 .export-card{width:min(760px,100%);background:var(--bg2);border:1px solid var(--border2);border-radius:18px;box-shadow:var(--shadow);padding:18px;}
 .export-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
 .export-title{font-size:16px;font-weight:700;letter-spacing:-0.2px;}
@@ -174,6 +174,34 @@ input,textarea{font-family:inherit;}
 .export-action:hover{background:var(--bg4);}
 .export-action.primary{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 2px 10px rgba(0,120,255,0.35);}
 .export-action.primary:hover{background:var(--grad-h);}
+.onboarding-btn{width:100%;margin-bottom:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text2);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;}
+.onboarding-btn:hover{background:var(--bg4);color:var(--text);}
+.onboarding-card{width:min(780px,100%);background:var(--bg2);border:1px solid var(--border2);border-radius:22px;box-shadow:var(--shadow);padding:22px;}
+.onboarding-grid{display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px;align-items:stretch;}
+.onboarding-rail{background:linear-gradient(180deg,rgba(0,136,255,0.12),rgba(255,255,255,0.02));border:1px solid var(--border);border-radius:18px;padding:16px;}
+.onboarding-kicker{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.onboarding-rail-title{font-size:19px;font-weight:700;line-height:1.2;letter-spacing:-0.3px;margin-bottom:8px;}
+.onboarding-rail-copy{font-size:12px;color:var(--text2);line-height:1.6;}
+.onboarding-steps{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
+.onboarding-step-chip{padding:8px 10px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text2);transition:all 0.15s;}
+.onboarding-step-chip.active{background:var(--accent-bg);border-color:var(--accent-bd);color:var(--accent);}
+.onboarding-main{display:flex;flex-direction:column;min-height:360px;}
+.onboarding-count{font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
+.onboarding-title{font-size:24px;font-weight:700;letter-spacing:-0.5px;line-height:1.18;margin-bottom:10px;}
+.onboarding-text{font-size:14px;color:var(--text2);line-height:1.7;white-space:pre-line;}
+.onboarding-points{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px;}
+.onboarding-point{padding:12px;border-radius:14px;background:var(--bg3);border:1px solid var(--border);}
+.onboarding-point-label{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.onboarding-point-value{font-size:12px;line-height:1.55;color:var(--text);}
+.onboarding-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:18px;}
+.onboarding-dots{display:flex;gap:6px;}
+.onboarding-dot{width:8px;height:8px;border-radius:50%;background:var(--bg4);opacity:0.65;}
+.onboarding-dot.active{background:var(--accent);opacity:1;box-shadow:0 0 0 4px rgba(0,136,255,0.12);}
+@media (max-width:860px){
+  .onboarding-grid{grid-template-columns:1fr;}
+  .onboarding-main{min-height:auto;}
+  .onboarding-points{grid-template-columns:1fr;}
+}
 
 /* ══════════════════ MAIN ══════════════════ */
 #main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
@@ -268,6 +296,21 @@ input,textarea{font-family:inherit;}
 
 .home-below{width:100%;max-width:680px;}
 .home-label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px;margin-top:28px;}
+.profile-card{background:linear-gradient(180deg,rgba(0,136,255,0.08),rgba(255,255,255,0.02));border:1px solid var(--border2);border-radius:18px;padding:18px 18px 16px;box-shadow:var(--shadow-sm);}
+.profile-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px;}
+.profile-kicker{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);}
+.profile-title{font-size:18px;font-weight:700;letter-spacing:-0.3px;margin-top:4px;}
+.profile-sub{font-size:12px;color:var(--text2);line-height:1.5;margin-top:6px;max-width:460px;}
+.profile-badge{padding:7px 11px;border-radius:999px;background:var(--bg2);border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap;}
+.profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.profile-field{background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:12px;}
+.profile-label{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.profile-value{font-size:13px;line-height:1.5;color:var(--text);}
+.profile-value.empty{color:var(--text2);}
+.profile-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+.profile-next{font-size:12px;color:var(--text2);line-height:1.5;}
+.profile-next strong{color:var(--text);}
+.profile-progress{font-size:12px;font-weight:600;color:var(--accent);}
 .sug-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
 .sug-btn{
   background:var(--bg2);border:1px solid var(--border);
@@ -510,6 +553,9 @@ input,textarea{font-family:inherit;}
     </div>
 
     <div class="sb-foot">
+      <button class="onboarding-btn" onclick="openOnboardingModal()">
+        <span>🧭</span><span>Guide rapide</span>
+      </button>
       <button class="export-btn" onclick="openExportModal()">
         <span>⬇️</span><span>Exporter le résumé</span>
       </button>
@@ -569,6 +615,48 @@ input,textarea{font-family:inherit;}
 
       <!-- SUGGESTIONS -->
       <div class="home-below">
+
+        <div class="home-label">Profil business actuel</div>
+        <div class="profile-card" id="business-profile-card">
+          <div class="profile-head">
+            <div>
+              <div class="profile-kicker">Current Business Profile</div>
+              <div class="profile-title">Vue d'ensemble de ton business</div>
+              <div class="profile-sub">VP résume ici ce qu'il a compris de ton activité pour éviter de repartir de zéro à chaque module.</div>
+            </div>
+            <div class="profile-badge" id="profile-badge">0 / 6 clarifiés</div>
+          </div>
+          <div class="profile-grid">
+            <div class="profile-field">
+              <div class="profile-label">Niche</div>
+              <div class="profile-value empty" id="bp-niche">À définir</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-label">Client idéal</div>
+              <div class="profile-value empty" id="bp-avatar">À définir</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-label">Offre actuelle</div>
+              <div class="profile-value empty" id="bp-offre">À définir</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-label">Objectif actuel</div>
+              <div class="profile-value empty" id="bp-goal">À définir</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-label">Bottleneck principal</div>
+              <div class="profile-value empty" id="bp-bottleneck">À définir</div>
+            </div>
+            <div class="profile-field">
+              <div class="profile-label">Devise / cible de référence</div>
+              <div class="profile-value" id="bp-currency">€ · 1 000 €</div>
+            </div>
+          </div>
+          <div class="profile-foot">
+            <div class="profile-next" id="bp-next">Complète tes premiers modules pour que VP construise ton profil business automatiquement.</div>
+            <div class="profile-progress" id="bp-progress">Étape suivante : définir ta niche</div>
+          </div>
+        </div>
 
         <!-- PROGRESS -->
         <div class="prog-section" id="prog-section">
@@ -687,6 +775,39 @@ input,textarea{font-family:inherit;}
   </div>
 </div>
 
+<div id="onboarding-modal">
+  <div class="onboarding-card">
+    <div class="export-head">
+      <div>
+        <div class="export-title">Guide rapide Visionnaires Pro</div>
+        <div class="export-sub">Un tour rapide pour comprendre comment utiliser VP efficacement.</div>
+      </div>
+      <button class="export-close" onclick="closeOnboardingModal()">✕</button>
+    </div>
+    <div class="onboarding-grid">
+      <div class="onboarding-rail">
+        <div class="onboarding-kicker">Onboarding</div>
+        <div class="onboarding-rail-title">Comment tirer le meilleur de VP</div>
+        <div class="onboarding-rail-copy">VP fonctionne comme un coach business structuré. Plus tu lui donnes du contexte clair, plus ses recommandations deviennent précises et utiles.</div>
+        <div class="onboarding-steps" id="onboarding-step-list"></div>
+      </div>
+      <div class="onboarding-main">
+        <div class="onboarding-count" id="onboarding-count">Étape 1 / 5</div>
+        <div class="onboarding-title" id="onboarding-title">Bienvenue dans VP</div>
+        <div class="onboarding-text" id="onboarding-text"></div>
+        <div class="onboarding-points" id="onboarding-points"></div>
+        <div class="onboarding-nav">
+          <div class="onboarding-dots" id="onboarding-dots"></div>
+          <div class="export-btn-row">
+            <button class="export-action" id="onboarding-prev" onclick="prevOnboardingStep()">Précédent</button>
+            <button class="export-action primary" id="onboarding-next" onclick="nextOnboardingStep()">Suivant</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.js"></script>
 <script>
 'use strict';
@@ -713,6 +834,49 @@ let userMoneyGoal = '1 000 €';
 let favorites = new Set();
 let sidebarOpen = {favorites:false};
 let isGeneratingDeliverable = false;
+let onboardingStep = 0;
+const ONBOARDING_STEPS = [
+  {
+    title:"Bienvenue dans VP",
+    text:"Visionnaires Pro n'est pas juste un chat.\nC'est un coach structuré qui t'aide à clarifier ton business, créer ton offre, analyser tes résultats et décider quoi faire ensuite.",
+    points:[
+      {label:"Ce que fait VP",value:"Il t'aide à penser plus clairement, décider plus vite et transformer tes idées en actions concrètes."},
+      {label:"Le bon réflexe",value:"Utilise VP comme un coach : donne du contexte, réponds précisément, puis avance module par module."}
+    ]
+  },
+  {
+    title:"Commencer au bon endroit",
+    text:"Depuis l'accueil, tu peux soit poser une question libre, soit cliquer sur un module recommandé.\nSi tu débutes, commence en général par la niche, puis l'offre, puis le tunnel ou la page de vente.",
+    points:[
+      {label:"Zone d'accueil",value:"Tape une question naturelle comme si tu parlais à un coach."},
+      {label:"Modules",value:"Chaque module correspond à un sujet business précis et garde son propre historique."}
+    ]
+  },
+  {
+    title:"Bien parler à VP",
+    text:"VP est meilleur quand il a le bon contexte.\nSi tu veux une bonne réponse, donne toujours le plus d'éléments utiles possible : niche, objectif, source de trafic, offre, chiffres, screenshots, contraintes.",
+    points:[
+      {label:"Images + prompts",value:"Tu peux joindre une image et écrire ta question en même temps. VP verra les deux."},
+      {label:"Analyses",value:"Pour les pubs, funnels ou dashboards, VP devrait d'abord te poser des questions s'il manque du contexte."}
+    ]
+  },
+  {
+    title:"Utiliser les outils premium",
+    text:"VP ne sert pas seulement à répondre.\nIl peut aussi structurer ton travail, garder le contexte important et transformer une conversation en document exploitable.",
+    points:[
+      {label:"Profil business",value:"La carte sur l'accueil résume ce que VP a compris de ton business pour éviter de repartir de zéro."},
+      {label:"Exports et documents",value:"Tu peux exporter un résumé ou cliquer sur « Créer le document » pour générer un livrable propre."}
+    ]
+  },
+  {
+    title:"Workflow recommandé",
+    text:"Le meilleur usage de VP est simple : clarifie d'abord, décide ensuite, exécute enfin.\nAvance étape par étape, puis reviens sur l'accueil pour voir ton profil business s'enrichir.",
+    points:[
+      {label:"Ordre conseillé",value:"Niche → Avatar → Offre → Tunnel/Page → Contenu/Pubs → Analyse → Optimisation."},
+      {label:"Rythme",value:"Mieux vaut une vraie réponse précise par module que dix questions vagues dans tous les sens."}
+    ]
+  }
+];
 
 /* ─────────────────────────────────────
    GEO / CURRENCY DETECTION
@@ -810,10 +974,14 @@ function enterApp(){
   renderSidebar();
   buildChips();
   updateProgress();
+  renderBusinessProfile();
   if(currentChatId && currentChatId!=='home' && chats[currentChatId]){
     openChat(currentChatId);
   } else {
     goHome();
+  }
+  if(localStorage.getItem('lvpro_onboarding_seen')!=='1'){
+    setTimeout(()=>openOnboardingModal(true),180);
   }
 }
 
@@ -943,6 +1111,7 @@ function goHome(){
   setActive('home');
   applyUser();
   updateProgress();
+  renderBusinessProfile();
   const btn=document.getElementById('mark-done-btn');
   if(btn)btn.classList.remove('show');
   const dBtn=document.getElementById('deliverable-btn');
@@ -1055,6 +1224,7 @@ function openChat(id,opts){
   currentChatId=id;
   const chat=chats[id];if(!chat)return;
   const mod=MODS[chat.module];
+  renderBusinessProfile();
 
   document.getElementById('tb-title').textContent=mod.title;
   document.getElementById('tb-pill').textContent=mod.badge;
@@ -1134,7 +1304,9 @@ async function sendMsg(){
     chat.messages.push({role:'user',content:text});
     appendBub('user',text);
   }
-  save();await callClaude(currentChatId);
+  save();
+  renderBusinessProfile();
+  await callClaude(currentChatId);
 }
 
 function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
@@ -1164,6 +1336,106 @@ function buildSharedContext(currentChatId){
   if(!snippets.length)return '';
 
   return `CONTEXTE MÉMOIRE — informations déjà données par l'utilisateur dans d'autres modules. Utilise-les comme base de travail pour éviter de lui faire répéter les mêmes éléments. Si une information semble floue ou contradictoire, clarifie-la brièvement au lieu de repartir de zéro.\n\n${snippets.join('\n')}\n\n`;
+}
+
+function latestChatForModule(modKey){
+  return Object.values(chats)
+    .filter(c=>c.module===modKey&&c.messages?.length)
+    .sort((a,b)=>b.ts-a.ts)[0] || null;
+}
+
+function latestUserSnippet(modKey){
+  const chat=latestChatForModule(modKey);
+  if(!chat)return '';
+  const userText=chat.messages
+    .filter(m=>m.role==='user'&&typeof m.content==='string'&&m.content&&m.content!=='[image]')
+    .map(m=>m.content.trim())
+    .filter(Boolean)
+    .slice(-2)
+    .join(' | ');
+  return compactText(userText || chat.title, 120);
+}
+
+function latestAssistantSnippet(modKey){
+  const chat=latestChatForModule(modKey);
+  if(!chat)return '';
+  const assistantText=chat.messages
+    .filter(m=>m.role==='assistant'&&typeof m.content==='string'&&m.content)
+    .map(m=>m.content.trim())
+    .filter(Boolean)
+    .slice(-1)[0] || '';
+  return compactText(assistantText, 120);
+}
+
+function profileValue(){
+  for(const value of arguments){
+    const clean=compactText(value || '', 140);
+    if(clean && clean !== '[image]')return clean;
+  }
+  return '';
+}
+
+function setProfileField(id,value){
+  const el=document.getElementById(id);
+  if(!el)return false;
+  if(value){
+    el.textContent=value;
+    el.classList.remove('empty');
+    return true;
+  }
+  el.textContent='À définir';
+  el.classList.add('empty');
+  return false;
+}
+
+function renderBusinessProfile(){
+  const hasCard=document.getElementById('business-profile-card');
+  if(!hasCard)return;
+
+  const niche=profileValue(latestUserSnippet('niche'), latestAssistantSnippet('niche'));
+  const avatar=profileValue(latestUserSnippet('avatar'), latestAssistantSnippet('avatar'));
+  const offer=profileValue(latestUserSnippet('offre'), latestAssistantSnippet('offre'), latestUserSnippet('positionnement'));
+  const goal=profileValue(latestUserSnippet('systeme'), latestAssistantSnippet('systeme'), latestUserSnippet('campagne'), userMoneyGoal);
+  const bottleneck=profileValue(
+    latestAssistantSnippet('analyse'),
+    latestUserSnippet('analyse'),
+    latestAssistantSnippet('pub'),
+    latestAssistantSnippet('tunnel'),
+    latestAssistantSnippet('landing'),
+    latestUserSnippet('pub'),
+    latestUserSnippet('tunnel'),
+    latestUserSnippet('landing')
+  );
+  const currency=`${userCurrency || '€'} · ${userMoneyGoal || '1 000 €'}`;
+
+  const filledCount=[
+    setProfileField('bp-niche',niche),
+    setProfileField('bp-avatar',avatar),
+    setProfileField('bp-offre',offer),
+    setProfileField('bp-goal',goal),
+    setProfileField('bp-bottleneck',bottleneck),
+    setProfileField('bp-currency',currency)
+  ].filter(Boolean).length;
+
+  const badge=document.getElementById('profile-badge');
+  if(badge)badge.textContent=`${filledCount} / 6 clarifiés`;
+
+  const nextText=document.getElementById('bp-next');
+  const nextStep=document.getElementById('bp-progress');
+  const nextMap=[
+    {missing:!niche,label:'définir ta niche',hint:"Commence par clarifier le marché, le problème et la cible."},
+    {missing:!avatar,label:'préciser ton client idéal',hint:"Plus ton avatar est clair, plus ton message devient précis."},
+    {missing:!offer,label:'formaliser ton offre',hint:"VP pourra mieux t'aider à vendre une fois l'offre clairement définie."},
+    {missing:!bottleneck,label:'identifier ton vrai goulot',hint:"Comprendre le blocage principal permet de prioriser les bons leviers."}
+  ].find(x=>x.missing);
+
+  if(nextMap){
+    if(nextText)nextText.innerHTML=`<strong>Conseil VP :</strong> ${nextMap.hint}`;
+    if(nextStep)nextStep.textContent=`Étape suivante : ${nextMap.label}`;
+  } else {
+    if(nextText)nextText.innerHTML=`<strong>Profil solide :</strong> VP a déjà une bonne base pour te coacher avec continuité.`;
+    if(nextStep)nextStep.textContent='Étape suivante : optimiser ce qui bloque maintenant';
+  }
 }
 
 function buildCoachGuardrails(){
@@ -1681,6 +1953,80 @@ function closeDeliverableModal(){
   document.getElementById('deliverable-modal').classList.remove('show');
 }
 
+function renderOnboardingStep(){
+  const step=ONBOARDING_STEPS[onboardingStep];
+  if(!step)return;
+
+  const count=document.getElementById('onboarding-count');
+  const title=document.getElementById('onboarding-title');
+  const text=document.getElementById('onboarding-text');
+  const points=document.getElementById('onboarding-points');
+  const stepList=document.getElementById('onboarding-step-list');
+  const dots=document.getElementById('onboarding-dots');
+  const prev=document.getElementById('onboarding-prev');
+  const next=document.getElementById('onboarding-next');
+
+  if(count)count.textContent=`Étape ${onboardingStep+1} / ${ONBOARDING_STEPS.length}`;
+  if(title)title.textContent=step.title;
+  if(text)text.textContent=step.text;
+
+  if(points){
+    points.innerHTML='';
+    step.points.forEach(point=>{
+      const card=el('div','onboarding-point');
+      card.innerHTML=`<div class="onboarding-point-label">${escapeHtml(point.label)}</div><div class="onboarding-point-value">${escapeHtml(point.value)}</div>`;
+      points.appendChild(card);
+    });
+  }
+
+  if(stepList){
+    stepList.innerHTML='';
+    ONBOARDING_STEPS.forEach((item,idx)=>{
+      const chip=el('button','onboarding-step-chip'+(idx===onboardingStep?' active':''));
+      chip.textContent=`${idx+1}. ${item.title}`;
+      chip.onclick=()=>{onboardingStep=idx;renderOnboardingStep();};
+      stepList.appendChild(chip);
+    });
+  }
+
+  if(dots){
+    dots.innerHTML='';
+    ONBOARDING_STEPS.forEach((_,idx)=>{
+      const dot=el('div','onboarding-dot'+(idx===onboardingStep?' active':''));
+      dots.appendChild(dot);
+    });
+  }
+
+  if(prev)prev.disabled=onboardingStep===0;
+  if(next)next.textContent=onboardingStep===ONBOARDING_STEPS.length-1?'Terminer':'Suivant';
+}
+
+function openOnboardingModal(forceFirstStep=false){
+  if(forceFirstStep)onboardingStep=0;
+  renderOnboardingStep();
+  document.getElementById('onboarding-modal').classList.add('show');
+}
+
+function closeOnboardingModal(markSeen=true){
+  document.getElementById('onboarding-modal').classList.remove('show');
+  if(markSeen)localStorage.setItem('lvpro_onboarding_seen','1');
+}
+
+function nextOnboardingStep(){
+  if(onboardingStep>=ONBOARDING_STEPS.length-1){
+    closeOnboardingModal(true);
+    return;
+  }
+  onboardingStep+=1;
+  renderOnboardingStep();
+}
+
+function prevOnboardingStep(){
+  if(onboardingStep===0)return;
+  onboardingStep-=1;
+  renderOnboardingStep();
+}
+
 async function generateDeliverable(chat){
   if(isGeneratingDeliverable)return;
   isGeneratingDeliverable=true;
@@ -1814,7 +2160,7 @@ async function callClaude(chatId){
         chat.title=firstUserAnswer.replace(/[—–]/g,'-').slice(0,40)+(firstUserAnswer.length>40?'…':'');
       }
     }
-    save();appendBub('ai',reply);renderSidebar();
+    save();appendBub('ai',reply);renderSidebar();renderBusinessProfile();
   }catch(e){removeTyping();appendBub('ai',"⚠️ Erreur de connexion au serveur. Vérifie que le proxy est bien configuré sur l'hébergement.");}
 
   isLoading=false;
