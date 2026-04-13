@@ -158,8 +158,8 @@ input,textarea{font-family:inherit;}
 .sb-logout:hover{color:var(--red);}
 
 /* export modal */
-#export-modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:1200;padding:24px;}
-#export-modal.show{display:flex;}
+#export-modal,#deliverable-modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:1200;padding:24px;}
+#export-modal.show,#deliverable-modal.show{display:flex;}
 .export-card{width:min(760px,100%);background:var(--bg2);border:1px solid var(--border2);border-radius:18px;box-shadow:var(--shadow);padding:18px;}
 .export-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
 .export-title{font-size:16px;font-weight:700;letter-spacing:-0.2px;}
@@ -194,6 +194,10 @@ input,textarea{font-family:inherit;}
 .phase-pill.p2{background:rgba(255,159,10,0.1);color:var(--phase2);border:1px solid rgba(255,159,10,0.2);}
 .phase-pill.p3{background:rgba(48,209,88,0.1);color:var(--phase3);border:1px solid rgba(48,209,88,0.2);}
 .phase-pill.home{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-bd);}
+.deliverable-btn{display:none;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;background:var(--bg3);border:1px solid var(--border);color:var(--text2);transition:all 0.15s;margin-left:8px;}
+.deliverable-btn:hover{border-color:rgba(0,136,255,0.35);color:var(--accent);background:var(--accent-bg);}
+.deliverable-btn.show{display:inline-flex;align-items:center;gap:5px;}
+.deliverable-btn:disabled{opacity:0.55;cursor:default;}
 
 /* ══════════════════ HOME PAGE ══════════════════ */
 #home{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:0 24px 40px;}
@@ -529,6 +533,7 @@ input,textarea{font-family:inherit;}
       </div>
       <div style="display:flex;align-items:center;">
         <span class="phase-pill home" id="tb-pill">Coach IA</span>
+        <button class="deliverable-btn" id="deliverable-btn" onclick="openDeliverableModal()">✦ Générer livrable</button>
         <button class="mark-done-btn" id="mark-done-btn" onclick="toggleModDone()">○ Marquer terminé</button>
       </div>
     </div>
@@ -661,6 +666,27 @@ input,textarea{font-family:inherit;}
   </div>
 </div>
 
+<div id="deliverable-modal">
+  <div class="export-card">
+    <div class="export-head">
+      <div>
+        <div class="export-title">Livrable du module</div>
+        <div class="export-sub">Une version propre et réutilisable de ce que VP a produit dans ce module.</div>
+      </div>
+      <button class="export-close" onclick="closeDeliverableModal()">✕</button>
+    </div>
+    <textarea id="deliverable-output" class="export-area" readonly></textarea>
+    <div class="export-actions">
+      <div class="export-status" id="deliverable-status">Aucun livrable généré.</div>
+      <div class="export-btn-row">
+        <button class="export-action" onclick="copyDeliverable()">Copier</button>
+        <button class="export-action" onclick="downloadDeliverableDocx()">Télécharger .docx</button>
+        <button class="export-action primary" onclick="downloadDeliverableMd()">Télécharger .md</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.js"></script>
 <script>
 'use strict';
@@ -686,6 +712,7 @@ let userCurrency = '€';
 let userMoneyGoal = '1 000 €';
 let favorites = new Set();
 let sidebarOpen = {favorites:false};
+let isGeneratingDeliverable = false;
 
 /* ─────────────────────────────────────
    GEO / CURRENCY DETECTION
@@ -918,6 +945,8 @@ function goHome(){
   updateProgress();
   const btn=document.getElementById('mark-done-btn');
   if(btn)btn.classList.remove('show');
+  const dBtn=document.getElementById('deliverable-btn');
+  if(dBtn)dBtn.classList.remove('show');
 }
 
 function updateProgress(){
@@ -1036,6 +1065,8 @@ function openChat(id,opts){
   setActive(id);
   const btn=document.getElementById('mark-done-btn');
   if(btn){btn.classList.add('show');updateMarkDoneBtn(chat.module);}
+  const dBtn=document.getElementById('deliverable-btn');
+  if(dBtn)dBtn.classList.add('show');
 
   const ca=document.getElementById('chat-area');ca.innerHTML='';
   chat.messages.forEach(m=>{
@@ -1480,6 +1511,265 @@ function downloadExportDocx(){
   a.remove();
   URL.revokeObjectURL(url);
   status.textContent=`Fichier téléchargé : ${fileName}`;
+}
+
+function buildDeliverablePrompt(modKey){
+  const prompts={
+    niche:`MODE LIVRABLE :
+Tu dois transformer cette conversation en livrable premium prêt à être gardé, relu ou envoyé.
+Produit un document Markdown propre avec ces sections :
+1. Titre du livrable
+2. Niche retenue
+3. Problème principal résolu
+4. Client ciblé
+5. Pourquoi cette niche est intéressante
+6. Offre simple de départ pour générer les premiers revenus
+7. Prochaines actions prioritaires
+Pas de blabla. Pas de questions. Pas de bloc choices.`,
+    avatar:`MODE LIVRABLE :
+Transforme la conversation en fiche avatar premium avec :
+1. Titre
+2. Client idéal
+3. Situation / profil
+4. 3 frustrations majeures
+5. 3 désirs majeurs
+6. Objections principales
+7. Vocabulaire à réutiliser dans le marketing
+Pas de questions. Pas de bloc choices.`,
+    douleurs:`MODE LIVRABLE :
+Transforme la conversation en carte des douleurs avec :
+1. Douleur principale
+2. Douleurs secondaires
+3. Coût en temps / argent / énergie
+4. Impact émotionnel
+5. Ce qu'ils ont déjà essayé
+6. Angle marketing à utiliser`,
+    offre:`MODE LIVRABLE :
+Transforme la conversation en fiche offre premium avec :
+1. Titre
+2. Problème spécifique résolu
+3. Client ciblé
+4. Résultat promis
+5. Mécanisme / solution
+6. Value stack
+7. Garantie
+8. Prix recommandé
+9. Pourquoi cette offre est forte
+10. Prochaines actions`,
+    positionnement:`MODE LIVRABLE :
+Transforme la conversation en document de positionnement avec :
+1. Positionnement central
+2. Angle différenciant
+3. Histoire / preuve de crédibilité
+4. Pitch 30 secondes
+5. Formulations à réutiliser`,
+    tunnel:`MODE LIVRABLE :
+Transforme la conversation en blueprint de tunnel avec :
+1. Vue d'ensemble
+2. Étapes du tunnel
+3. Objectif de chaque étape
+4. Points faibles / fuites si audit
+5. Priorités d'optimisation
+6. Prochaines actions`,
+    emails_setup:`MODE LIVRABLE :
+Transforme la conversation en plan de séquence email avec :
+1. Objectif
+2. Structure des 5 emails
+3. Angle de chaque email
+4. CTA
+5. Prochaines actions`,
+    contenu:`MODE LIVRABLE :
+Transforme la conversation en plan contenu premium avec :
+1. Angle éditorial
+2. Piliers de contenu
+3. Plan 30 jours
+4. Hooks clés
+5. Recommandations de contenu à produire maintenant`,
+    copywriting:`MODE LIVRABLE :
+Transforme la conversation en livrable copywriting avec :
+1. Contexte
+2. Diagnostic
+3. Version finale du texte
+4. Pourquoi ça marche
+5. Prochain test recommandé`,
+    campagne:`MODE LIVRABLE :
+Transforme la conversation en plan de lancement / campagne avec :
+1. Objectif
+2. Ressources disponibles
+3. Plan étape par étape
+4. KPIs à suivre
+5. Risques / points de vigilance`,
+    objections:`MODE LIVRABLE :
+Transforme la conversation en sheet de traitement des objections avec :
+1. Objection
+2. Vraie peur derrière
+3. Réponse recommandée
+4. Erreurs à éviter`,
+    landing:`MODE LIVRABLE :
+Transforme la conversation en audit / blueprint de page de vente avec :
+1. Score global
+2. Forces
+3. Faiblesses
+4. Audit par section
+5. Priorités d'optimisation
+6. Prochaines actions`,
+    analyse:`MODE LIVRABLE :
+Transforme la conversation en mémo d'analyse décisionnel avec :
+1. Contexte
+2. Chiffres clés
+3. Ce qui marche
+4. Ce qui bloque
+5. Lecture prudente des données
+6. Recommandations prioritaires
+7. Prochain test / prochaine décision`,
+    automatisation:`MODE LIVRABLE :
+Transforme la conversation en plan d'automatisation avec :
+1. Processus à automatiser
+2. Outils
+3. Priorité
+4. Flux recommandé
+5. Étapes suivantes`,
+    upsell:`MODE LIVRABLE :
+Transforme la conversation en plan d'upsell / premium offer avec :
+1. Offre principale actuelle
+2. Problème suivant du client
+3. Offre upsell / premium
+4. Prix
+5. Positionnement
+6. Moment idéal pour la proposer`,
+    pub:`MODE LIVRABLE :
+Transforme la conversation en mémo publicitaire premium avec :
+1. Contexte confirmé
+2. KPIs clés
+3. Ce qui performe
+4. Ce qui sous-performe
+5. Décisions prudentes
+6. Plan d'action prioritaire`,
+    systeme:`MODE LIVRABLE :
+Transforme la conversation en feuille de route business avec :
+1. État actuel
+2. Ce qui est en place
+3. Goulots d'étranglement
+4. Plan 90 jours
+5. Priorités absolues`
+  };
+  const base=`Rends un document propre en Markdown, structuré avec des titres et des puces. Pas de questions. Pas de bloc choices. Pas de phrase d'intro inutile. Le résultat doit se lire comme un livrable premium remis à un client.`;
+  return `${prompts[modKey]||prompts.analyse}\n${base}`;
+}
+
+function setDeliverableStatus(msg){
+  const status=document.getElementById('deliverable-status');
+  if(status)status.textContent=msg;
+}
+
+function openDeliverableModal(){
+  const modal=document.getElementById('deliverable-modal');
+  const output=document.getElementById('deliverable-output');
+  if(!currentChatId||!chats[currentChatId]){
+    output.value='';
+    setDeliverableStatus("Ouvre d'abord un chat/module avant de générer un livrable.");
+    modal.classList.add('show');
+    return;
+  }
+  modal.classList.add('show');
+  output.value='';
+  setDeliverableStatus('Génération du livrable en cours...');
+  generateDeliverable(chats[currentChatId]);
+}
+
+function closeDeliverableModal(){
+  document.getElementById('deliverable-modal').classList.remove('show');
+}
+
+async function generateDeliverable(chat){
+  if(isGeneratingDeliverable)return;
+  isGeneratingDeliverable=true;
+  const btn=document.getElementById('deliverable-btn');
+  if(btn)btn.disabled=true;
+
+  const msgs=chat.messages.filter(m=>m.role==='user'||m.role==='assistant').map(m=>{
+    if(m.role==='user'&&m.imgBase64){
+      const match=m.imgBase64.match(/^data:(image\/\w+);base64,(.+)$/);
+      const parts=[];
+      if(match)parts.push({type:'image',source:{type:'base64',media_type:match[1],data:match[2]}});
+      parts.push({type:'text',text:m.content!=='[image]'?m.content:"Voici l'image liée à ce livrable."});
+      return{role:'user',content:parts};
+    }
+    return{role:m.role,content:m.content};
+  });
+
+  msgs.push({role:'user',content:`Génère maintenant le livrable final de ce module.\n\n${buildDeliverablePrompt(chat.module)}`});
+
+  try{
+    const res=await fetch(API_ENDPOINT,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1800,system:getCurrencyPrefix()+buildSharedContext(chat.id)+buildCoachGuardrails()+buildAuditPlaybook(chat.module)+MODS[chat.module].systemPrompt,messages:msgs})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.error?.message || data.error || 'API error');
+    const text=data.content?.[0]?.text?.trim() || 'Aucun livrable généré.';
+    document.getElementById('deliverable-output').value=text;
+    setDeliverableStatus('Livrable prêt à copier ou télécharger.');
+  }catch(e){
+    document.getElementById('deliverable-output').value='';
+    setDeliverableStatus("Impossible de générer le livrable pour le moment.");
+  }
+
+  isGeneratingDeliverable=false;
+  if(btn)btn.disabled=false;
+}
+
+async function copyDeliverable(){
+  const text=document.getElementById('deliverable-output').value.trim();
+  if(!text){setDeliverableStatus('Aucun livrable à copier.');return;}
+  try{
+    await navigator.clipboard.writeText(text);
+    setDeliverableStatus('Livrable copié.');
+  }catch(e){
+    setDeliverableStatus('Copie impossible automatiquement. Copie-le manuellement.');
+  }
+}
+
+function downloadDeliverableMd(){
+  const text=document.getElementById('deliverable-output').value.trim();
+  if(!text){setDeliverableStatus('Aucun livrable à télécharger.');return;}
+  const chat=chats[currentChatId];
+  const modSlug=(chat?.module||'livrable').replace(/[^a-z0-9_-]/gi,'-').toLowerCase();
+  const fileName=`visionnaires-livrable-${modSlug}-${formatExportDate(Date.now())}.md`;
+  const blob=new Blob([text],{type:'text/markdown;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  setDeliverableStatus(`Fichier téléchargé : ${fileName}`);
+}
+
+function downloadDeliverableDocx(){
+  const text=document.getElementById('deliverable-output').value.trim();
+  if(!text){setDeliverableStatus('Aucun livrable à télécharger.');return;}
+  if(!window.htmlDocx || typeof window.htmlDocx.asBlob!=='function'){
+    setDeliverableStatus('Export .docx indisponible pour le moment. Recharge la page puis réessaie.');
+    return;
+  }
+  const chat=chats[currentChatId];
+  const modSlug=(chat?.module||'livrable').replace(/[^a-z0-9_-]/gi,'-').toLowerCase();
+  const fileName=`visionnaires-livrable-${modSlug}-${formatExportDate(Date.now())}.docx`;
+  const html=summaryMarkdownToHtml(text);
+  const blob=window.htmlDocx.asBlob(html);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  setDeliverableStatus(`Fichier téléchargé : ${fileName}`);
 }
 
 /* ─────────────────────────────────────
