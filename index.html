@@ -1134,6 +1134,20 @@ function buildSharedContext(currentChatId){
   return `CONTEXTE MÉMOIRE — informations déjà données par l'utilisateur dans d'autres modules. Utilise-les comme base de travail pour éviter de lui faire répéter les mêmes éléments. Si une information semble floue ou contradictoire, clarifie-la brièvement au lieu de repartir de zéro.\n\n${snippets.join('\n')}\n\n`;
 }
 
+function buildCoachGuardrails(){
+  return `GARDE-FOUS COACHING — à respecter dans tous les modules :
+- Ton ton doit être direct mais calme, posé et bienveillant. Jamais sec, cassant ou humiliant.
+- Ne rends pas un verdict final à partir d'un screenshot isolé si le contexte est incomplet.
+- Quand une image, un funnel, une pub, une page, un dashboard ou des chiffres sont partagés, commence par évaluer si tu as assez de contexte pour conclure.
+- S'il manque un contexte important, dis d'abord : "Je vais te poser quelques questions pour avoir le bon contexte avant de te donner une analyse fiable."
+- Puis pose les questions les plus utiles avant de trancher.
+- Exemples de contexte à vérifier selon le cas : période analysée, volume de trafic, split test/variations, durée de chaque variation, autres outils actifs, source du trafic, objectif de campagne, place exacte du screenshot dans le funnel, données manquantes hors écran.
+- Si tu fais une première lecture avant d'avoir tout le contexte, présente-la comme provisoire, jamais comme un jugement définitif.
+- Si les données sont insuffisantes ou non comparables, dis-le clairement et explique pourquoi.
+
+`;
+}
+
 function exportMemoryLines(currentChatId){
   const memoryOrder=['niche','avatar','douleurs','offre','positionnement','tunnel','emails_setup','contenu','copywriting','campagne','objections','landing','analyse','automatisation','upsell','pub','systeme'];
   return memoryOrder.map(modKey=>{
@@ -1417,7 +1431,7 @@ async function callClaude(chatId){
     const res=await fetch(API_ENDPOINT,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,system:getCurrencyPrefix()+buildSharedContext(chatId)+mod.systemPrompt,messages:msgs})
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,system:getCurrencyPrefix()+buildSharedContext(chatId)+buildCoachGuardrails()+mod.systemPrompt,messages:msgs})
     });
     const data=await res.json();
     if(!res.ok){
@@ -1751,6 +1765,14 @@ ANALYSE D'IMAGES : Si screenshot de tunnel ou page de vente, analyse design, cop
 MISSION : Construire le tunnel le plus simple possible qui convertit. Pas besoin de complexité — un bon tunnel, c'est opt-in → valeur → offre.
 STRUCTURE : Opt-in (lead magnet) → Page de confirmation → Séquence email → Page de vente → Paiement → Onboarding.
 VISUELS : Si tu as assez d'informations sur le tunnel (étapes, conversions, fuites, pages existantes), génère un dashboard visuel simple avec scores par étape, goulet principal, et 3 priorités.
+AVANT D'ANALYSER UN SCREENSHOT DE FUNNEL : si le contexte n'est pas clair, pose d'abord les questions les plus importantes sur :
+- combien de funnels ou variantes tournent en parallèle
+- s'il y a un split test / A/B test
+- depuis combien de temps chaque variante tourne
+- s'il existe des outils externes non visibles sur le screenshot (ex: ConvertBox)
+- si les chiffres montrés concernent tout le funnel ou seulement une étape
+- quelle est la source de trafic
+Ne donne pas de conclusion ferme tant que ces points restent flous.
 SÉQUENCE :
 1. Tu vends quoi et à quel prix ?
 2. Tu as déjà un tunnel ou tu pars de zéro ?
@@ -1880,6 +1902,7 @@ MISSION : Construire ou optimiser une page de vente qui convertit — chaque sec
 STRUCTURE : Headline (accroche) → Sous-titre → Problème → Erreur commune → Solution → Ce qui est inclus → Témoignages → Qui tu es → Garantie → Prix + CTA → FAQ → CTA final.
 RÈGLE : Un bon headline vaut 80% de la page. Si le headline est faible, tout le reste ne sert à rien.
 VISUELS : Si tu analyses une page existante, génère un dashboard simple avec score global, scores par section, principaux points faibles, et priorités d'optimisation.
+AVANT DE JUGER UNE PAGE : vérifie s'il s'agit d'une version unique ou d'un test, s'il y a des variations actives, quel est l'objectif de la page, et si des éléments externes influencent la conversion.
 SÉQUENCE :
 1. Tu as déjà une page ou tu pars de zéro ?
 2. C'est pour quelle offre — décris-la en une phrase ?
@@ -1905,6 +1928,14 @@ VISUELS : Dès que tu as assez de données, génère un dashboard visuel utile. 
 - insights (cartes de score)
 - line (tendance / évolution)
 - projections simples si tu peux faire une estimation raisonnable du type "si la tendance continue"
+AVANT TOUTE ANALYSE DE FUNNEL / DASHBOARD : si l'image montre un funnel, une séquence ou un tableau partiel, pose d'abord les questions critiques pour obtenir le bon contexte. Exemples :
+1. Est-ce que c'est un seul funnel ou plusieurs ?
+2. Y a-t-il un split test ou des variations en cours ?
+3. Depuis combien de temps chaque variation tourne-t-elle ?
+4. Y a-t-il d'autres outils ou pages qui influencent ces chiffres sans apparaître sur le screenshot ?
+5. Quelle période exacte regardons-nous ?
+6. Ces chiffres représentent-ils tout le funnel ou seulement une étape ?
+Si ces réponses manquent, annonce que ton analyse est provisoire et ne donne pas de recommandation trop tranchée.
 SÉQUENCE (si pas de données partagées) :
 1. Où en es-tu : premières ventes, ou tu veux scaler ce qui marche ?
 2. Quelle est ta métrique la plus préoccupante en ce moment ?
@@ -1973,6 +2004,7 @@ RÈGLE DONNÉES MINIMALES : Si les données couvrent moins de 7 jours, dis clair
 ANALYSE D'IMAGES — PRIORITÉ : Si screenshot Ads Manager avec 7+ jours de données, analyse CPM, CPC, CTR, CPL, CPA, ROAS par campagne/adset/pub. Identifie gagnantes/perdantes. Recommande ce qu'il faut couper, scaler, tester.
 STRUCTURE CAMPAGNE : TOF (audience froide) → MOF (retargeting engagés) → BOF (retargeting visiteurs page de vente).
 VISUELS : Si tu as assez de métriques, génère un dashboard visuel avec kpis, comparaison des campagnes/adsets, score de santé, tendance simple et projections prudentes si elles sont raisonnables.
+AVANT DE CONCLURE : vérifie toujours si les campagnes comparées couvrent la même période, ont le même budget, le même objectif, et si des tests créatifs ou audiences tournent en parallèle. Si ce n'est pas comparable, dis-le avant de recommander de couper ou scaler.
 FORMAT DASHBOARD : Quand les données sont suffisantes, utilise si pertinent :
 \`\`\`dashboard
 {"kpis":[{"label":"CTR","value":"1.8%","trend":12},{"label":"CPL","value":"7.40","trend":-9},{"label":"CPA","value":"26","trend":-4},{"label":"ROAS","value":"2.7x","trend":18}],"chartTitle":"Comparaison campagnes","bars":[{"label":"Prospection","value":58,"display":"58%"},{"label":"Retargeting","value":82,"display":"82%"},{"label":"Lookalike","value":64,"display":"64%"}],"insights":[{"label":"Campagne forte","score":"Retargeting","note":"ROAS supérieur et CPA plus stable."},{"label":"Point faible","score":"CTR faible","note":"Le hook créatif manque de force en prospection."}],"line":{"title":"Évolution du ROAS","points":[{"label":"J1","value":1.9},{"label":"J2","value":2.1},{"label":"J3","value":2.0},{"label":"J4","value":2.4},{"label":"J5","value":2.5},{"label":"J6","value":2.6},{"label":"J7","value":2.7}]},"projectionTitle":"Projection prudente","projections":[{"label":"ROAS estimé à 7 jours","value":"2.9x"},{"label":"CPA estimé","value":"24"}],"recommendations":["Coupe les ensembles sous le seuil cible","Scale progressivement la campagne gagnante","Teste 2 nouveaux hooks créatifs en prospection"]}
