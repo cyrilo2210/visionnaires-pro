@@ -329,6 +329,24 @@ input,textarea{font-family:inherit;}
 .bar-track{flex:1;background:var(--bg4);border-radius:4px;height:7px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:4px;transition:width .7s ease;}
 .bar-val{font-size:11px;color:var(--text);width:36px;flex-shrink:0;}
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:8px;}
+.insight-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px;}
+.insight-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.insight-lbl{font-size:10.5px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;}
+.insight-score{font-size:18px;font-weight:700;letter-spacing:-0.3px;}
+.insight-note{font-size:12px;color:var(--text2);line-height:1.45;margin-top:6px;}
+.line-chart{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:8px;}
+.line-svg{width:100%;height:160px;display:block;overflow:visible;}
+.line-grid{stroke:var(--border2);stroke-width:1;}
+.line-path{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
+.line-point{fill:var(--accent);}
+.line-labels{display:flex;justify-content:space-between;gap:8px;margin-top:8px;}
+.line-labels span{font-size:10px;color:var(--text3);text-align:center;flex:1;}
+.proj-box{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:8px;}
+.proj-item{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);}
+.proj-item:last-child{border-bottom:none;padding-bottom:0;}
+.proj-lbl{font-size:12px;color:var(--text2);}
+.proj-val{font-size:12px;font-weight:600;color:var(--text);}
 .reco-box{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:8px;}
 .reco-ttl{font-size:10.5px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:9px;}
 .reco-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px;font-size:13px;line-height:1.5;}
@@ -1515,6 +1533,28 @@ function renderDash(text,container){
       });
       wrap.appendChild(ch);
     }
+    if(d.insights?.length){
+      const grid=el('div','insight-grid');
+      d.insights.forEach(ins=>{
+        const card=el('div','insight-card');
+        card.innerHTML=`<div class="insight-top"><div class="insight-lbl">${ins.label||'Insight'}</div><div class="insight-score">${ins.score||''}</div></div><div class="insight-note">${ins.note||''}</div>`;
+        grid.appendChild(card);
+      });
+      wrap.appendChild(grid);
+    }
+    if(d.line?.points?.length>=2){
+      wrap.appendChild(renderLineChart(d.line));
+    }
+    if(d.projections?.length){
+      const pb=el('div','proj-box');
+      pb.innerHTML=`<div class="bar-ttl">${d.projectionTitle||'Projection simple'}</div>`;
+      d.projections.forEach(p=>{
+        const row=el('div','proj-item');
+        row.innerHTML=`<div class="proj-lbl">${p.label}</div><div class="proj-val">${p.value}</div>`;
+        pb.appendChild(row);
+      });
+      wrap.appendChild(pb);
+    }
     if(d.recommendations?.length){
       const rc=el('div','reco-box');
       rc.innerHTML='<div class="reco-ttl">🎯 Recommandations</div>';
@@ -1527,6 +1567,33 @@ function renderDash(text,container){
     }
     container.appendChild(wrap);
   }catch(e){}
+}
+
+function renderLineChart(line){
+  const box=el('div','line-chart');
+  box.innerHTML=`<div class="bar-ttl">${line.title||'Tendance'}</div>`;
+  const points=line.points||[];
+  const values=points.map(p=>Number(p.value)||0);
+  const max=Math.max(...values);
+  const min=Math.min(...values);
+  const range=max-min||1;
+  const width=320;
+  const height=120;
+  const coords=points.map((p,i)=>{
+    const x=(i/(points.length-1))*(width-20)+10;
+    const y=height-(((Number(p.value)||0)-min)/range)*(height-20)-10;
+    return {x,y,label:p.label||'',value:p.value};
+  });
+  const path=coords.map((p,i)=>`${i===0?'M':'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+  const svg=`<svg class="line-svg" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+    <line class="line-grid" x1="10" y1="${height-10}" x2="${width-10}" y2="${height-10}"></line>
+    <line class="line-grid" x1="10" y1="10" x2="10" y2="${height-10}"></line>
+    <path class="line-path" d="${path}"></path>
+    ${coords.map(p=>`<circle class="line-point" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5"></circle>`).join('')}
+  </svg>`;
+  const labels=`<div class="line-labels">${coords.map(p=>`<span>${p.label}</span>`).join('')}</div>`;
+  box.innerHTML+=svg+labels;
+  return box;
 }
 
 /* ─────────────────────────────────────
@@ -1683,6 +1750,7 @@ FORMAT CHOICES :
 ANALYSE D'IMAGES : Si screenshot de tunnel ou page de vente, analyse design, copy et structure — donne un score /10 et 3 améliorations prioritaires.
 MISSION : Construire le tunnel le plus simple possible qui convertit. Pas besoin de complexité — un bon tunnel, c'est opt-in → valeur → offre.
 STRUCTURE : Opt-in (lead magnet) → Page de confirmation → Séquence email → Page de vente → Paiement → Onboarding.
+VISUELS : Si tu as assez d'informations sur le tunnel (étapes, conversions, fuites, pages existantes), génère un dashboard visuel simple avec scores par étape, goulet principal, et 3 priorités.
 SÉQUENCE :
 1. Tu vends quoi et à quel prix ?
 2. Tu as déjà un tunnel ou tu pars de zéro ?
@@ -1811,6 +1879,7 @@ ANALYSE D'IMAGES : Si screenshot de page de vente, analyse chaque section visibl
 MISSION : Construire ou optimiser une page de vente qui convertit — chaque section a un rôle précis.
 STRUCTURE : Headline (accroche) → Sous-titre → Problème → Erreur commune → Solution → Ce qui est inclus → Témoignages → Qui tu es → Garantie → Prix + CTA → FAQ → CTA final.
 RÈGLE : Un bon headline vaut 80% de la page. Si le headline est faible, tout le reste ne sert à rien.
+VISUELS : Si tu analyses une page existante, génère un dashboard simple avec score global, scores par section, principaux points faibles, et priorités d'optimisation.
 SÉQUENCE :
 1. Tu as déjà une page ou tu pars de zéro ?
 2. C'est pour quelle offre — décris-la en une phrase ?
@@ -1830,13 +1899,19 @@ FORMAT CHOICES :
 ANALYSE D'IMAGES — PRIORITÉ ABSOLUE : Si screenshot d'Ads Manager, Google Analytics, stats email ou tableau de bord, analyse TOUTES les métriques visibles immédiatement. Identifie ce qui est bon, ce qui est mauvais, et donne 3 actions prioritaires.
 BENCHMARKS : Opt-in 30-50% / Conversion page de vente 1-3% / Ouverture email 25-40% / Clics email 2-5% / ROAS minimum 2x.
 Si une métrique est sous le benchmark, dis-le clairement et explique pourquoi.
+VISUELS : Dès que tu as assez de données, génère un dashboard visuel utile. Tu peux inclure :
+- kpis
+- bars
+- insights (cartes de score)
+- line (tendance / évolution)
+- projections simples si tu peux faire une estimation raisonnable du type "si la tendance continue"
 SÉQUENCE (si pas de données partagées) :
 1. Où en es-tu : premières ventes, ou tu veux scaler ce qui marche ?
 2. Quelle est ta métrique la plus préoccupante en ce moment ?
 3. Partage tes chiffres ou un screenshot pour que j'analyse.
 FORMAT DASHBOARD : Génère quand tu as des données :
 \`\`\`dashboard
-{"kpis":[{"label":"Taux conversion","value":"2.3%","trend":15},{"label":"Ouverture email","value":"31%","trend":-5},{"label":"CPL","value":"4.20","trend":-12},{"label":"ROAS","value":"3.2x","trend":8}],"chartTitle":"Performance par canal","bars":[{"label":"Email","value":85,"display":"85%"},{"label":"Instagram","value":62,"display":"62%"},{"label":"Organique","value":45,"display":"45%"}],"recommendations":["Améliore le headline — conversion trop basse","Teste un nouvel objet email","Scale ce qui a le meilleur ROAS"]}
+{"kpis":[{"label":"Taux conversion","value":"2.3%","trend":15},{"label":"Ouverture email","value":"31%","trend":-5},{"label":"CPL","value":"4.20","trend":-12},{"label":"ROAS","value":"3.2x","trend":8}],"chartTitle":"Performance par canal","bars":[{"label":"Email","value":85,"display":"85%"},{"label":"Instagram","value":62,"display":"62%"},{"label":"Organique","value":45,"display":"45%"}],"insights":[{"label":"Headline page","score":"6/10","note":"Le message manque de spécificité."},{"label":"Qualité trafic","score":"8/10","note":"Le trafic convertit mieux sur Instagram."}],"line":{"title":"Évolution sur 7 jours","points":[{"label":"J1","value":2.1},{"label":"J2","value":2.4},{"label":"J3","value":2.3},{"label":"J4","value":2.7},{"label":"J5","value":2.6},{"label":"J6","value":2.9},{"label":"J7","value":3.2}]},"projectionTitle":"Projection si la tendance continue","projections":[{"label":"ROAS estimé à 7 jours","value":"3.6x"},{"label":"CPA estimé","value":"-12%"}],"recommendations":["Améliore le headline — conversion trop basse","Teste un nouvel objet email","Scale ce qui a le meilleur ROAS"]}
 \`\`\``},
 
   automatisation:{title:"⚙️ Automatiser ton business",desc:"Phase 3 · Système qui tourne sans toi",badge:"Phase 3 — Scale",badgeClass:"p3",
@@ -1897,6 +1972,11 @@ AVANT TOUTE ANALYSE — si les infos ne sont pas déjà partagées, pose ces que
 RÈGLE DONNÉES MINIMALES : Si les données couvrent moins de 7 jours, dis clairement : "Ces données couvrent [X jours] — insuffisant pour décider. Partage au moins 7 jours, idéalement 14."
 ANALYSE D'IMAGES — PRIORITÉ : Si screenshot Ads Manager avec 7+ jours de données, analyse CPM, CPC, CTR, CPL, CPA, ROAS par campagne/adset/pub. Identifie gagnantes/perdantes. Recommande ce qu'il faut couper, scaler, tester.
 STRUCTURE CAMPAGNE : TOF (audience froide) → MOF (retargeting engagés) → BOF (retargeting visiteurs page de vente).
+VISUELS : Si tu as assez de métriques, génère un dashboard visuel avec kpis, comparaison des campagnes/adsets, score de santé, tendance simple et projections prudentes si elles sont raisonnables.
+FORMAT DASHBOARD : Quand les données sont suffisantes, utilise si pertinent :
+\`\`\`dashboard
+{"kpis":[{"label":"CTR","value":"1.8%","trend":12},{"label":"CPL","value":"7.40","trend":-9},{"label":"CPA","value":"26","trend":-4},{"label":"ROAS","value":"2.7x","trend":18}],"chartTitle":"Comparaison campagnes","bars":[{"label":"Prospection","value":58,"display":"58%"},{"label":"Retargeting","value":82,"display":"82%"},{"label":"Lookalike","value":64,"display":"64%"}],"insights":[{"label":"Campagne forte","score":"Retargeting","note":"ROAS supérieur et CPA plus stable."},{"label":"Point faible","score":"CTR faible","note":"Le hook créatif manque de force en prospection."}],"line":{"title":"Évolution du ROAS","points":[{"label":"J1","value":1.9},{"label":"J2","value":2.1},{"label":"J3","value":2.0},{"label":"J4","value":2.4},{"label":"J5","value":2.5},{"label":"J6","value":2.6},{"label":"J7","value":2.7}]},"projectionTitle":"Projection prudente","projections":[{"label":"ROAS estimé à 7 jours","value":"2.9x"},{"label":"CPA estimé","value":"24"}],"recommendations":["Coupe les ensembles sous le seuil cible","Scale progressivement la campagne gagnante","Teste 2 nouveaux hooks créatifs en prospection"]}
+\`\`\`
 RÈGLE D'OR : Prouve organiquement d'abord. Scale avec la pub ce qui marche déjà.`},
 
   systeme:{title:"♾️ Croissance durable",desc:"Phase 3 · Business qui génère en dormant",badge:"Phase 3 — Scale",badgeClass:"p3",
