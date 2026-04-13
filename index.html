@@ -158,8 +158,8 @@ input,textarea{font-family:inherit;}
 .sb-logout:hover{color:var(--red);}
 
 /* export modal */
-#export-modal,#deliverable-modal,#onboarding-modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:1200;padding:24px;}
-#export-modal.show,#deliverable-modal.show,#onboarding-modal.show{display:flex;}
+#export-modal,#deliverable-modal,#onboarding-modal,#profile-modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:1200;padding:24px;}
+#export-modal.show,#deliverable-modal.show,#onboarding-modal.show,#profile-modal.show{display:flex;}
 .export-card{width:min(760px,100%);background:var(--bg2);border:1px solid var(--border2);border-radius:18px;box-shadow:var(--shadow);padding:18px;}
 .export-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
 .export-title{font-size:16px;font-weight:700;letter-spacing:-0.2px;}
@@ -197,10 +197,20 @@ input,textarea{font-family:inherit;}
 .onboarding-dots{display:flex;gap:6px;}
 .onboarding-dot{width:8px;height:8px;border-radius:50%;background:var(--bg4);opacity:0.65;}
 .onboarding-dot.active{background:var(--accent);opacity:1;box-shadow:0 0 0 4px rgba(0,136,255,0.12);}
+.profile-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.profile-form-field{display:flex;flex-direction:column;gap:7px;}
+.profile-form-field.full{grid-column:1 / -1;}
+.profile-form-label{font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);}
+.profile-form-input,.profile-form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:13px;padding:11px 12px;outline:none;transition:border 0.15s,box-shadow 0.15s;}
+.profile-form-input:focus,.profile-form-textarea:focus{border-color:rgba(0,136,255,0.45);box-shadow:0 0 0 3px var(--accent-bg);}
+.profile-form-textarea{min-height:84px;resize:vertical;line-height:1.55;}
+.profile-modal-copy{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;}
+.profile-modal-note{font-size:11px;color:var(--text3);margin-top:12px;line-height:1.55;}
 @media (max-width:860px){
   .onboarding-grid{grid-template-columns:1fr;}
   .onboarding-main{min-height:auto;}
   .onboarding-points{grid-template-columns:1fr;}
+  .profile-form{grid-template-columns:1fr;}
 }
 
 /* ══════════════════ MAIN ══════════════════ */
@@ -298,10 +308,13 @@ input,textarea{font-family:inherit;}
 .home-label{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px;margin-top:28px;}
 .profile-card{background:linear-gradient(180deg,rgba(0,136,255,0.08),rgba(255,255,255,0.02));border:1px solid var(--border2);border-radius:18px;padding:18px 18px 16px;box-shadow:var(--shadow-sm);}
 .profile-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px;}
+.profile-head-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .profile-kicker{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);}
 .profile-title{font-size:18px;font-weight:700;letter-spacing:-0.3px;margin-top:4px;}
 .profile-sub{font-size:12px;color:var(--text2);line-height:1.5;margin-top:6px;max-width:460px;}
 .profile-badge{padding:7px 11px;border-radius:999px;background:var(--bg2);border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap;}
+.profile-edit-btn{padding:7px 11px;border-radius:999px;background:var(--bg2);border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap;transition:all 0.15s;}
+.profile-edit-btn:hover{background:var(--bg3);border-color:var(--accent-bd);color:var(--text);}
 .profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
 .profile-field{background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:12px;}
 .profile-label{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
@@ -333,6 +346,27 @@ input,textarea{font-family:inherit;}
 /* ══════════════════ CHAT PAGE ══════════════════ */
 #chat-pg{display:none;flex:1;flex-direction:column;overflow:hidden;}
 #chat-pg.show{display:flex;}
+.workspace-shell{padding:18px 28px 12px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--bg2),rgba(0,0,0,0));flex-shrink:0;}
+.workspace-card{background:linear-gradient(180deg,rgba(0,136,255,0.08),rgba(255,255,255,0.02));border:1px solid var(--border2);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow-sm);}
+.workspace-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px;}
+.workspace-kicker{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:7px;}
+.workspace-title{font-size:20px;font-weight:700;letter-spacing:-0.4px;line-height:1.2;}
+.workspace-desc{font-size:12px;color:var(--text2);line-height:1.55;margin-top:7px;max-width:560px;}
+.workspace-pill{padding:7px 11px;border-radius:999px;background:var(--bg2);border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text2);white-space:nowrap;}
+.workspace-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px;}
+.workspace-panel{background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:12px;}
+.workspace-label{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.workspace-value{font-size:12.5px;line-height:1.55;color:var(--text);}
+.workspace-value.empty{color:var(--text2);}
+.workspace-starters{display:flex;flex-wrap:wrap;gap:8px;}
+.workspace-starter{padding:7px 12px;border-radius:999px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:12px;font-weight:600;transition:all 0.15s;}
+.workspace-starter:hover{background:var(--accent-bg);border-color:var(--accent-bd);color:var(--accent);}
+.pinned-insight{margin:12px 28px 0;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;flex-shrink:0;}
+.pinned-badge{min-width:28px;height:28px;border-radius:9px;background:var(--accent-bg);border:1px solid var(--accent-bd);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:14px;font-weight:700;flex-shrink:0;}
+.pinned-copy{min-width:0;flex:1;}
+.pinned-label{font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.pinned-text{font-size:12.5px;line-height:1.6;color:var(--text);}
+.pinned-text.empty{color:var(--text2);}
 #chat-area{flex:1;overflow-y:auto;padding:24px 28px;display:flex;flex-direction:column;gap:16px;}
 
 /* messages */
@@ -624,7 +658,10 @@ input,textarea{font-family:inherit;}
               <div class="profile-title">Vue d'ensemble de ton business</div>
               <div class="profile-sub">VP résume ici ce qu'il a compris de ton activité pour éviter de repartir de zéro à chaque module.</div>
             </div>
-            <div class="profile-badge" id="profile-badge">0 / 6 clarifiés</div>
+            <div class="profile-head-actions">
+              <button class="profile-edit-btn" onclick="openProfileModal()">✏️ Modifier</button>
+              <div class="profile-badge" id="profile-badge">0 / 6 clarifiés</div>
+            </div>
           </div>
           <div class="profile-grid">
             <div class="profile-field">
@@ -713,6 +750,40 @@ input,textarea{font-family:inherit;}
 
     <!-- ── CHAT PAGE ── -->
     <div id="chat-pg">
+      <div class="workspace-shell">
+        <div class="workspace-card">
+          <div class="workspace-top">
+            <div>
+              <div class="workspace-kicker" id="workspace-kicker">Module actif</div>
+              <div class="workspace-title" id="workspace-title">Workspace module</div>
+              <div class="workspace-desc" id="workspace-desc">VP te donne ici le cadre, le contexte déjà connu, et ce que tu devrais obtenir à la fin de ce module.</div>
+            </div>
+            <div class="workspace-pill" id="workspace-pill">En cours</div>
+          </div>
+          <div class="workspace-grid">
+            <div class="workspace-panel">
+              <div class="workspace-label">Ce que VP sait déjà</div>
+              <div class="workspace-value" id="workspace-known">Aucun contexte repris pour le moment.</div>
+            </div>
+            <div class="workspace-panel">
+              <div class="workspace-label">Résultat visé</div>
+              <div class="workspace-value" id="workspace-outcome">Clarifier ce module pour avancer sans confusion.</div>
+            </div>
+            <div class="workspace-panel">
+              <div class="workspace-label">Prochaine meilleure action</div>
+              <div class="workspace-value" id="workspace-next">Répondre précisément aux questions de VP pour obtenir une recommandation fiable.</div>
+            </div>
+          </div>
+          <div class="workspace-starters" id="workspace-starters"></div>
+        </div>
+      </div>
+      <div class="pinned-insight">
+        <div class="pinned-badge">✦</div>
+        <div class="pinned-copy">
+          <div class="pinned-label">Takeaway actuel</div>
+          <div class="pinned-text empty" id="pinned-insight-text">Ce module affichera ici la décision, la priorité ou l'insight principal à retenir au fur et à mesure.</div>
+        </div>
+      </div>
       <div id="chat-area"></div>
       <div id="input-area">
         <div class="qbtns" id="qbtns"></div>
@@ -808,6 +879,53 @@ input,textarea{font-family:inherit;}
   </div>
 </div>
 
+<div id="profile-modal">
+  <div class="export-card">
+    <div class="export-head">
+      <div>
+        <div class="export-title">Modifier le profil business</div>
+        <div class="export-sub">Corrige, complète ou efface ce que VP a mal compris.</div>
+      </div>
+      <button class="export-close" onclick="closeProfileModal()">✕</button>
+    </div>
+    <div class="profile-modal-copy">Laisse un champ vide si tu veux qu'il affiche <em>À définir</em>. Clique sur <strong>Revenir en mode auto</strong> pour laisser VP le reconstruire depuis les chats.</div>
+    <div class="profile-form">
+      <div class="profile-form-field">
+        <label class="profile-form-label" for="profile-niche-input">Niche</label>
+        <input class="profile-form-input" id="profile-niche-input" type="text" placeholder="Ex : Coach sport pour femmes de 40+">
+      </div>
+      <div class="profile-form-field">
+        <label class="profile-form-label" for="profile-avatar-input">Client idéal</label>
+        <input class="profile-form-input" id="profile-avatar-input" type="text" placeholder="Ex : Maman active qui veut perdre 8 kg">
+      </div>
+      <div class="profile-form-field">
+        <label class="profile-form-label" for="profile-offre-input">Offre actuelle</label>
+        <input class="profile-form-input" id="profile-offre-input" type="text" placeholder="Ex : Programme de 8 semaines">
+      </div>
+      <div class="profile-form-field">
+        <label class="profile-form-label" for="profile-goal-input">Objectif actuel</label>
+        <input class="profile-form-input" id="profile-goal-input" type="text" placeholder="Ex : Atteindre 10k/mois ou signer 5 clients">
+      </div>
+      <div class="profile-form-field full">
+        <label class="profile-form-label" for="profile-bottleneck-input">Bottleneck principal</label>
+        <textarea class="profile-form-textarea" id="profile-bottleneck-input" placeholder="Ex : Le funnel ne convertit pas assez après l'opt-in"></textarea>
+      </div>
+      <div class="profile-form-field">
+        <label class="profile-form-label" for="profile-currency-input">Devise / cible de référence</label>
+        <input class="profile-form-input" id="profile-currency-input" type="text" placeholder="Ex : € · 1 000 €">
+      </div>
+    </div>
+    <div class="profile-modal-note">Quand tu sauvegardes, tes valeurs manuelles prennent la priorité sur le résumé automatique de VP.</div>
+    <div class="export-actions">
+      <div class="export-status" id="profile-status">Tu peux corriger une ou plusieurs lignes seulement.</div>
+      <div class="export-btn-row">
+        <button class="export-action" onclick="resetBusinessProfileOverrides()">Revenir en mode auto</button>
+        <button class="export-action primary" onclick="saveProfileModal()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.js"></script>
 <script>
 'use strict';
@@ -834,6 +952,7 @@ let userMoneyGoal = '1 000 €';
 let favorites = new Set();
 let sidebarOpen = {favorites:false};
 let isGeneratingDeliverable = false;
+let businessProfileOverrides = {};
 let onboardingStep = 0;
 const ONBOARDING_STEPS = [
   {
@@ -921,8 +1040,8 @@ const phaseMap = {
   analyse:'Phase 3 — Scale',automatisation:'Phase 3 — Scale',upsell:'Phase 3 — Scale',pub:'Phase 3 — Scale',systeme:'Phase 3 — Scale'
 };
 
-function save(){try{localStorage.setItem('lvpro_c',JSON.stringify(chats));localStorage.setItem('lvpro_f',JSON.stringify(folders));localStorage.setItem('lvpro_n',userName);localStorage.setItem('lvpro_d',JSON.stringify([...doneMods]));localStorage.setItem('lvpro_fav',JSON.stringify([...favorites]));localStorage.setItem('lvpro_cur',currentChatId||'home');}catch(e){}}
-function load(){try{const c=localStorage.getItem('lvpro_c');if(c)chats=JSON.parse(c);const f=localStorage.getItem('lvpro_f');if(f)folders=JSON.parse(f);const n=localStorage.getItem('lvpro_n');if(n)userName=n;const d=localStorage.getItem('lvpro_d');if(d)doneMods=new Set(JSON.parse(d));const fav=localStorage.getItem('lvpro_fav');if(fav)favorites=new Set(JSON.parse(fav));currentChatId=localStorage.getItem('lvpro_cur')||null;}catch(e){}}
+function save(){try{localStorage.setItem('lvpro_c',JSON.stringify(chats));localStorage.setItem('lvpro_f',JSON.stringify(folders));localStorage.setItem('lvpro_n',userName);localStorage.setItem('lvpro_d',JSON.stringify([...doneMods]));localStorage.setItem('lvpro_fav',JSON.stringify([...favorites]));localStorage.setItem('lvpro_cur',currentChatId||'home');localStorage.setItem('lvpro_profile_overrides',JSON.stringify(businessProfileOverrides));}catch(e){}}
+function load(){try{const c=localStorage.getItem('lvpro_c');if(c)chats=JSON.parse(c);const f=localStorage.getItem('lvpro_f');if(f)folders=JSON.parse(f);const n=localStorage.getItem('lvpro_n');if(n)userName=n;const d=localStorage.getItem('lvpro_d');if(d)doneMods=new Set(JSON.parse(d));const fav=localStorage.getItem('lvpro_fav');if(fav)favorites=new Set(JSON.parse(fav));const po=localStorage.getItem('lvpro_profile_overrides');if(po)businessProfileOverrides=JSON.parse(po);currentChatId=localStorage.getItem('lvpro_cur')||null;}catch(e){}}
 
 function applyCountryPick(){
   const val=document.getElementById('user-country').value;
@@ -1225,6 +1344,7 @@ function openChat(id,opts){
   const chat=chats[id];if(!chat)return;
   const mod=MODS[chat.module];
   renderBusinessProfile();
+  renderWorkspaceHeader(chat);
 
   document.getElementById('tb-title').textContent=mod.title;
   document.getElementById('tb-pill').textContent=mod.badge;
@@ -1306,6 +1426,7 @@ async function sendMsg(){
   }
   save();
   renderBusinessProfile();
+  renderWorkspaceHeader(chat);
   await callClaude(currentChatId);
 }
 
@@ -1375,6 +1496,182 @@ function profileValue(){
   return '';
 }
 
+function profileOverrideValue(key,autoValue){
+  if(Object.prototype.hasOwnProperty.call(businessProfileOverrides,key)){
+    if(businessProfileOverrides[key]==='__EMPTY__')return '';
+    return compactText(businessProfileOverrides[key] || '', 160);
+  }
+  return autoValue;
+}
+
+function setProfileStatus(message){
+  const el=document.getElementById('profile-status');
+  if(el)el.textContent=message;
+}
+
+function getAutoBusinessProfile(){
+  return {
+    niche:profileValue(latestUserSnippet('niche'), latestAssistantSnippet('niche')),
+    avatar:profileValue(latestUserSnippet('avatar'), latestAssistantSnippet('avatar')),
+    offer:profileValue(latestUserSnippet('offre'), latestAssistantSnippet('offre'), latestUserSnippet('positionnement')),
+    goal:profileValue(latestUserSnippet('systeme'), latestAssistantSnippet('systeme'), latestUserSnippet('campagne'), userMoneyGoal),
+    bottleneck:profileValue(
+      latestAssistantSnippet('analyse'),
+      latestUserSnippet('analyse'),
+      latestAssistantSnippet('pub'),
+      latestAssistantSnippet('tunnel'),
+      latestAssistantSnippet('landing'),
+      latestUserSnippet('pub'),
+      latestUserSnippet('tunnel'),
+      latestUserSnippet('landing')
+    ),
+    currency:`${userCurrency || '€'} · ${userMoneyGoal || '1 000 €'}`
+  };
+}
+
+const MODULE_OUTCOMES = {
+  niche:"Ressortir avec une niche claire, un problème précis et une direction crédible pour vendre.",
+  avatar:"Mieux comprendre exactement qui tu aides, ce qu'il veut et ce qui le bloque.",
+  douleurs:"Identifier les douleurs assez urgentes et coûteuses pour construire une vraie offre.",
+  offre:"Définir une offre désirable, claire et assez forte pour être vendue avec confiance.",
+  positionnement:"Trouver un angle clair qui te différencie et rend ton message plus mémorable.",
+  tunnel:"Savoir quel funnel construire ou corriger pour améliorer la conversion.",
+  emails_setup:"Structurer une séquence email utile pour nourrir, relancer et convertir.",
+  contenu:"Trouver quoi publier pour attirer l'audience juste et la faire avancer vers l'offre.",
+  copywriting:"Clarifier les mots à utiliser pour faire comprendre, désirer et acheter.",
+  campagne:"Ressortir avec un plan de campagne simple, ordonné et exécutable.",
+  objections:"Savoir quelles objections lever et comment y répondre proprement.",
+  landing:"Améliorer la page pour que le message et la conversion soient plus solides.",
+  analyse:"Lire les chiffres correctement et savoir quelle décision prendre ensuite.",
+  automatisation:"Identifier ce qui doit être automatisé pour gagner du temps sans perdre en qualité.",
+  upsell:"Trouver comment augmenter la valeur par client avec une montée en gamme logique.",
+  pub:"Comprendre quoi garder, couper ou tester pour mieux utiliser le budget pub.",
+  systeme:"Construire une vision plus durable du business et prioriser le vrai levier de croissance."
+};
+
+const MODULE_STARTERS = {
+  niche:["Aide-moi à choisir une niche plus précise","Challenge ma niche actuelle","Trouve-moi le vrai problème à résoudre"],
+  avatar:["Décris mon client idéal clairement","Aide-moi à comprendre ses frustrations","Précise ses désirs et objections"],
+  douleurs:["Liste les douleurs les plus urgentes","Quelles douleurs font vraiment acheter ?","Aide-moi à creuser le problème racine"],
+  offre:["Aide-moi à trouver le problème principal à résoudre","Construisons mon offre avec Hormozi","Évalue si mon offre est vraiment désirable"],
+  positionnement:["Trouve mon angle différenciant","Aide-moi à me distinguer du marché","Clarifie ma promesse unique"],
+  tunnel:["Dis-moi quel funnel je devrais avoir","Analyse mon tunnel actuel","Trouve mon point de fuite principal"],
+  emails_setup:["Aide-moi à structurer ma séquence email","Quels emails écrire en premier ?","Comment convertir plus avec mes emails ?"],
+  contenu:["Trouve-moi 3 angles de contenu","Aide-moi à créer un plan de contenu","Analyse pourquoi mon contenu ne prend pas"],
+  copywriting:["Réécris mon message principal","Aide-moi à trouver un hook plus fort","Clarifie ma promesse de vente"],
+  campagne:["Aide-moi à construire ma campagne","Quel ordre d'actions pour lancer ?","Que dois-je préparer avant de vendre ?"],
+  objections:["Liste les objections à traiter","Aide-moi à répondre sans être lourd","Quelle objection bloque le plus l'achat ?"],
+  landing:["Audit ma page de vente","Que faut-il corriger en priorité ?","Aide-moi à mieux structurer ma page"],
+  analyse:["Analyse mes résultats proprement","Montre-moi la priorité #1","Dis-moi quoi surveiller ensuite"],
+  automatisation:["Que devrais-je automatiser d'abord ?","Trouve-moi les tâches répétitives","Aide-moi à simplifier mon système"],
+  upsell:["Aide-moi à créer une offre premium","Comment augmenter la valeur par client ?","Quel upsell serait logique ici ?"],
+  pub:["Analyse mes publicités","Que couper, garder ou tester ?","Aide-moi à lire mes Meta Ads"],
+  systeme:["Quel est mon vrai goulot ?","Aide-moi à construire un système plus durable","Quelle priorité de croissance maintenant ?"]
+};
+
+function latestAssistantFromChat(chat){
+  if(!chat?.messages?.length)return '';
+  return chat.messages
+    .filter(m=>m.role==='assistant'&&typeof m.content==='string'&&m.content.trim())
+    .map(m=>m.content.trim())
+    .slice(-1)[0] || '';
+}
+
+function latestUserFromChat(chat){
+  if(!chat?.messages?.length)return '';
+  return chat.messages
+    .filter(m=>m.role==='user'&&typeof m.content==='string'&&m.content.trim()&&m.content!=='[image]')
+    .map(m=>m.content.trim())
+    .slice(-1)[0] || '';
+}
+
+function extractPinnedInsight(chat){
+  const assistant=latestAssistantFromChat(chat);
+  if(assistant){
+    const cleaned=assistant
+      .replace(/```[\s\S]*?```/g,'')
+      .split('\n')
+      .map(s=>s.trim())
+      .filter(Boolean)
+      .find(line=>!/^[-*#>`]/.test(line) && line.length>24) || assistant;
+    return compactText(cleaned, 190);
+  }
+  const user=latestUserFromChat(chat);
+  if(user)return compactText(`Point de départ actuel : ${user}`,190);
+  return '';
+}
+
+function buildWorkspaceKnownContext(chat){
+  const relatedOrder=['niche','avatar','offre','positionnement','tunnel','landing','pub','analyse','systeme'];
+  const items=relatedOrder
+    .filter(key=>key!==chat.module)
+    .map(key=>{
+      const value=profileValue(latestUserSnippet(key), latestAssistantSnippet(key));
+      return value?`${MODS[key].title.replace(/^[^\s]+\s+/,'')}: ${value}`:'';
+    })
+    .filter(Boolean)
+    .slice(0,2);
+  return items.join(' · ');
+}
+
+function inferWorkspaceNext(chat){
+  if(!chat?.messages?.length)return "Commence par répondre avec un contexte précis pour que VP puisse t'orienter correctement.";
+  if(chat.messages.filter(m=>m.role==='assistant').length===0)return "Donne à VP un maximum de contexte utile avant la première analyse.";
+  const lastAssistant=latestAssistantFromChat(chat).toLowerCase();
+  if(/question|clarifi|précis|contexte/.test(lastAssistant))return "Réponds point par point aux questions de VP pour débloquer une recommandation plus fiable.";
+  if(/priorit|action|étape suivante|prochaine étape/.test(lastAssistant))return "Prends la priorité #1 donnée par VP et transforme-la en prochaine action concrète.";
+  return "Continue en donnant des détails précis ou en demandant à VP de transformer l'analyse en plan d'action.";
+}
+
+function renderWorkspaceHeader(chat){
+  const mod=MODS[chat.module];
+  const title=document.getElementById('workspace-title');
+  const desc=document.getElementById('workspace-desc');
+  const known=document.getElementById('workspace-known');
+  const outcome=document.getElementById('workspace-outcome');
+  const next=document.getElementById('workspace-next');
+  const pill=document.getElementById('workspace-pill');
+  const starters=document.getElementById('workspace-starters');
+  const pinned=document.getElementById('pinned-insight-text');
+  if(!mod || !title)return;
+
+  const knownContext=buildWorkspaceKnownContext(chat);
+  const pinnedInsight=extractPinnedInsight(chat);
+  const stepCount=chat.messages.filter(m=>m.role==='user').length;
+
+  document.getElementById('workspace-kicker').textContent=mod.badge;
+  title.textContent=mod.title;
+  desc.textContent=mod.desc || "VP te guide ici pas à pas sur ce sujet.";
+  known.textContent=knownContext || "VP n'a pas encore assez de contexte relié à d'autres modules.";
+  known.classList.toggle('empty',!knownContext);
+  outcome.textContent=MODULE_OUTCOMES[chat.module] || "Clarifier ce module pour avancer sans confusion.";
+  next.textContent=inferWorkspaceNext(chat);
+  pill.textContent=doneMods.has(chat.module)?'Module clarifié':(stepCount>0?'En cours':'À démarrer');
+
+  if(starters){
+    starters.innerHTML='';
+    (MODULE_STARTERS[chat.module] || []).slice(0,3).forEach(text=>{
+      const btn=el('button','workspace-starter');
+      btn.textContent=text;
+      btn.onclick=()=>prefillComposer(text);
+      starters.appendChild(btn);
+    });
+  }
+
+  if(pinned){
+    pinned.textContent=pinnedInsight || "Ce module affichera ici la décision, la priorité ou l'insight principal à retenir au fur et à mesure.";
+    pinned.classList.toggle('empty',!pinnedInsight);
+  }
+}
+
+function prefillComposer(text){
+  const input=document.getElementById('user-input');
+  if(!input)return;
+  input.value=text;
+  autoResize(input);
+  input.focus();
+}
+
 function setProfileField(id,value){
   const el=document.getElementById(id);
   if(!el)return false;
@@ -1392,21 +1689,19 @@ function renderBusinessProfile(){
   const hasCard=document.getElementById('business-profile-card');
   if(!hasCard)return;
 
-  const niche=profileValue(latestUserSnippet('niche'), latestAssistantSnippet('niche'));
-  const avatar=profileValue(latestUserSnippet('avatar'), latestAssistantSnippet('avatar'));
-  const offer=profileValue(latestUserSnippet('offre'), latestAssistantSnippet('offre'), latestUserSnippet('positionnement'));
-  const goal=profileValue(latestUserSnippet('systeme'), latestAssistantSnippet('systeme'), latestUserSnippet('campagne'), userMoneyGoal);
-  const bottleneck=profileValue(
-    latestAssistantSnippet('analyse'),
-    latestUserSnippet('analyse'),
-    latestAssistantSnippet('pub'),
-    latestAssistantSnippet('tunnel'),
-    latestAssistantSnippet('landing'),
-    latestUserSnippet('pub'),
-    latestUserSnippet('tunnel'),
-    latestUserSnippet('landing')
-  );
-  const currency=`${userCurrency || '€'} · ${userMoneyGoal || '1 000 €'}`;
+  const autoProfile=getAutoBusinessProfile();
+  const autoNiche=autoProfile.niche;
+  const autoAvatar=autoProfile.avatar;
+  const autoOffer=autoProfile.offer;
+  const autoGoal=autoProfile.goal;
+  const autoBottleneck=autoProfile.bottleneck;
+  const autoCurrency=autoProfile.currency;
+  const niche=profileOverrideValue('niche',autoNiche);
+  const avatar=profileOverrideValue('avatar',autoAvatar);
+  const offer=profileOverrideValue('offer',autoOffer);
+  const goal=profileOverrideValue('goal',autoGoal);
+  const bottleneck=profileOverrideValue('bottleneck',autoBottleneck);
+  const currency=profileOverrideValue('currency',autoCurrency);
 
   const filledCount=[
     setProfileField('bp-niche',niche),
@@ -1418,7 +1713,8 @@ function renderBusinessProfile(){
   ].filter(Boolean).length;
 
   const badge=document.getElementById('profile-badge');
-  if(badge)badge.textContent=`${filledCount} / 6 clarifiés`;
+  const manualCount=Object.keys(businessProfileOverrides).length;
+  if(badge)badge.textContent=manualCount?`${filledCount} / 6 clarifiés · ${manualCount} manuel${manualCount>1?'s':''}`:`${filledCount} / 6 clarifiés`;
 
   const nextText=document.getElementById('bp-next');
   const nextStep=document.getElementById('bp-progress');
@@ -1436,6 +1732,55 @@ function renderBusinessProfile(){
     if(nextText)nextText.innerHTML=`<strong>Profil solide :</strong> VP a déjà une bonne base pour te coacher avec continuité.`;
     if(nextStep)nextStep.textContent='Étape suivante : optimiser ce qui bloque maintenant';
   }
+}
+
+function openProfileModal(){
+  const autoProfile=getAutoBusinessProfile();
+  document.getElementById('profile-niche-input').value=Object.prototype.hasOwnProperty.call(businessProfileOverrides,'niche') ? (businessProfileOverrides.niche==='__EMPTY__'?'':businessProfileOverrides.niche) : autoProfile.niche;
+  document.getElementById('profile-avatar-input').value=Object.prototype.hasOwnProperty.call(businessProfileOverrides,'avatar') ? (businessProfileOverrides.avatar==='__EMPTY__'?'':businessProfileOverrides.avatar) : autoProfile.avatar;
+  document.getElementById('profile-offre-input').value=Object.prototype.hasOwnProperty.call(businessProfileOverrides,'offer') ? (businessProfileOverrides.offer==='__EMPTY__'?'':businessProfileOverrides.offer) : autoProfile.offer;
+  document.getElementById('profile-goal-input').value=Object.prototype.hasOwnProperty.call(businessProfileOverrides,'goal') ? (businessProfileOverrides.goal==='__EMPTY__'?'':businessProfileOverrides.goal) : autoProfile.goal;
+  document.getElementById('profile-bottleneck-input').value=Object.prototype.hasOwnProperty.call(businessProfileOverrides,'bottleneck') ? (businessProfileOverrides.bottleneck==='__EMPTY__'?'':businessProfileOverrides.bottleneck) : autoProfile.bottleneck;
+  document.getElementById('profile-currency-input').value=Object.prototype.hasOwnProperty.call(businessProfileOverrides,'currency') ? (businessProfileOverrides.currency==='__EMPTY__'?'':businessProfileOverrides.currency) : autoProfile.currency;
+  setProfileStatus('Tu peux corriger une ou plusieurs lignes seulement.');
+  document.getElementById('profile-modal').classList.add('show');
+}
+
+function closeProfileModal(){
+  document.getElementById('profile-modal').classList.remove('show');
+}
+
+function saveProfileModal(){
+  const autoProfile=getAutoBusinessProfile();
+  const nextOverrides={};
+  [
+    ['niche','profile-niche-input'],
+    ['avatar','profile-avatar-input'],
+    ['offer','profile-offre-input'],
+    ['goal','profile-goal-input'],
+    ['bottleneck','profile-bottleneck-input'],
+    ['currency','profile-currency-input']
+  ].forEach(([key,id])=>{
+    const value=document.getElementById(id).value.trim();
+    const autoValue=compactText(autoProfile[key] || '', 160);
+    if(!value && autoValue){
+      nextOverrides[key]='__EMPTY__';
+    } else if(value && value!==autoValue){
+      nextOverrides[key]=value;
+    }
+  });
+  businessProfileOverrides=nextOverrides;
+  save();
+  renderBusinessProfile();
+  closeProfileModal();
+}
+
+function resetBusinessProfileOverrides(){
+  businessProfileOverrides={};
+  save();
+  renderBusinessProfile();
+  openProfileModal();
+  setProfileStatus("Profil remis en mode automatique.");
 }
 
 function buildCoachGuardrails(){
@@ -2160,7 +2505,7 @@ async function callClaude(chatId){
         chat.title=firstUserAnswer.replace(/[—–]/g,'-').slice(0,40)+(firstUserAnswer.length>40?'…':'');
       }
     }
-    save();appendBub('ai',reply);renderSidebar();renderBusinessProfile();
+    save();appendBub('ai',reply);renderSidebar();renderBusinessProfile();renderWorkspaceHeader(chat);
   }catch(e){removeTyping();appendBub('ai',"⚠️ Erreur de connexion au serveur. Vérifie que le proxy est bien configuré sur l'hébergement.");}
 
   isLoading=false;
