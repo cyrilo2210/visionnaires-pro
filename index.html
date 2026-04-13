@@ -1149,6 +1149,82 @@ function buildCoachGuardrails(){
 `;
 }
 
+function buildAuditPlaybook(modKey){
+  const playbooks={
+    tunnel:`PLAYBOOK AUDIT — TUNNEL :
+- Si un screenshot de funnel ou de stats est partagé, ne fais pas d'analyse définitive tout de suite.
+- Commence par une courte phrase du type : "Je vais te poser quelques questions pour avoir le bon contexte avant de te donner une analyse fiable."
+- Vérifie en priorité :
+  1. Est-ce qu'il y a un seul funnel ou plusieurs funnels ?
+  2. Y a-t-il un split test / A/B test / variations ?
+  3. Depuis combien de temps chaque variation tourne-t-elle ?
+  4. Y a-t-il des outils externes non visibles qui influencent le funnel (ex: ConvertBox) ?
+  5. Les chiffres montrent-ils tout le funnel ou seulement une étape ?
+  6. Quelle est la source de trafic ?
+- Tant que ces points sont flous, parle d'observations provisoires, pas de verdict final.
+- Quand le contexte est clair, rends ton audit dans cet ordre :
+  1. Contexte confirmé
+  2. Ce qui marche
+  3. Ce qui bloque
+  4. Priorité #1
+  5. 3 actions concrètes`,
+    landing:`PLAYBOOK AUDIT — PAGE DE VENTE :
+- Avant de noter ou juger une page, clarifie si nécessaire :
+  1. Est-ce la seule version ou une variation / split test ?
+  2. Quel est l'objectif exact de cette page ?
+  3. Quelle source de trafic arrive dessus ?
+  4. Y a-t-il des éléments externes de conversion non visibles ?
+- Si le contexte manque, pose d'abord les questions avant de conclure.
+- Quand le contexte est suffisant, rends ton audit dans cet ordre :
+  1. Contexte confirmé
+  2. Score global provisoire ou final
+  3. Forces visibles
+  4. Faiblesses visibles
+  5. Ordre exact des priorités`,
+    analyse:`PLAYBOOK AUDIT — ANALYSE DE DONNÉES :
+- Si les chiffres proviennent d'un funnel, d'un dashboard, d'un outil ou d'un screenshot partiel, commence par vérifier la comparabilité des données.
+- Questions prioritaires :
+  1. Quelle période exacte regardons-nous ?
+  2. Est-ce un funnel unique ou plusieurs ?
+  3. Y a-t-il des variations / split tests ?
+  4. Depuis combien de temps chaque variation tourne-t-elle ?
+  5. Y a-t-il des outils ou étapes non visibles qui affectent les chiffres ?
+  6. Les chiffres concernent-ils tout le système ou seulement une partie ?
+- Si les données ne sont pas comparables, dis-le explicitement.
+- Ensuite seulement : benchmark, lecture des chiffres, visualisation, recommandations.`,
+    pub:`PLAYBOOK AUDIT — PUBLICITÉ PAYANTE :
+- Ne décide jamais de couper/scaler une campagne avant d'avoir vérifié la comparabilité.
+- Questions prioritaires :
+  1. Les campagnes comparées couvrent-elles la même période ?
+  2. Ont-elles le même objectif ?
+  3. Ont-elles le même budget ou une logique de budget comparable ?
+  4. Y a-t-il des tests créatifs, audiences ou placements en parallèle ?
+  5. Le volume de données est-il suffisant ?
+- Si ce n'est pas comparable, dis : "Je peux te donner une lecture provisoire, mais pas une décision ferme."
+- Ensuite seulement : gagnants, perdants, priorité d'action, dashboard.`,
+    contenu:`PLAYBOOK AUDIT — CONTENU / PROFIL :
+- Si un profil ou un post est partagé, clarifie d'abord si besoin :
+  1. Quelle plateforme exacte ?
+  2. Quel est l'objectif : audience, leads, ventes ?
+  3. Ce contenu s'inscrit-il dans une série, un test, ou une stratégie plus large ?
+- Ensuite seulement : audit bio, message, clarté du problème, potentiel d'engagement, améliorations.`,
+    copywriting:`PLAYBOOK AUDIT — COPY :
+- Si un texte ou screenshot est partagé, clarifie si besoin :
+  1. Quel est l'objectif exact du texte ?
+  2. Où sera-t-il utilisé ?
+  3. À qui s'adresse-t-il ?
+  4. Y a-t-il plusieurs variantes en test ?
+- Ensuite seulement : diagnostic, ce qui est faible, pourquoi, version améliorée.`,
+    objections:`PLAYBOOK AUDIT — OBJECTIONS :
+- Si une conversation est partagée, clarifie si besoin :
+  1. À quel moment exact l'objection arrive ?
+  2. Quelle offre et quel prix sont en jeu ?
+  3. Quel était le contexte juste avant l'objection ?
+- Ensuite seulement : vraie peur derrière l'objection, qualité de la réponse actuelle, meilleure réponse.`
+  };
+  return playbooks[modKey]?`${playbooks[modKey]}\n\n`:'';
+}
+
 function exportMemoryLines(currentChatId){
   const memoryOrder=['niche','avatar','douleurs','offre','positionnement','tunnel','emails_setup','contenu','copywriting','campagne','objections','landing','analyse','automatisation','upsell','pub','systeme'];
   return memoryOrder.map(modKey=>{
@@ -1432,7 +1508,7 @@ async function callClaude(chatId){
     const res=await fetch(API_ENDPOINT,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,system:getCurrencyPrefix()+buildSharedContext(chatId)+buildCoachGuardrails()+mod.systemPrompt,messages:msgs})
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1500,system:getCurrencyPrefix()+buildSharedContext(chatId)+buildCoachGuardrails()+buildAuditPlaybook(chat.module)+mod.systemPrompt,messages:msgs})
     });
     const data=await res.json();
     if(!res.ok){
