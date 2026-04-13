@@ -1097,6 +1097,7 @@ async function sendMsg(){
   if(pendingImg){
     showImgBub(pendingImg.base64,pendingImg.name);
     chat.messages.push({role:'user',content:text||'[image]',imgBase64:pendingImg.base64,imgUrl:pendingImg.base64,imgName:pendingImg.name});
+    if(text)appendBub('user',text);
     clearImg();
   } else {
     chat.messages.push({role:'user',content:text});
